@@ -1,6 +1,7 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import sharp from "sharp";
-import { Papel, StatusAgendamento } from "@salao-saas/shared";
+import { Prisma } from "@prisma/client";
+import { CATEGORIAS_SERVICO, CategoriaServico, categoriasDaBusca, Papel, StatusAgendamento } from "@salao-saas/shared";
 import { PrismaService } from "../prisma/prisma.service";
 import { MercadoPagoService } from "../pagamentos/mercadopago.service";
 import { ConfiguracoesService } from "../configuracoes/configuracoes.service";
@@ -234,20 +235,48 @@ export class SaloesService {
   // ser geocodificado (ver comCoordenadasResolvidas/GeocodificacaoService) —
   // sem isso, um salão que só preencheu o endereço no cadastro nunca
   // apareceria aqui nem no mapa.
-  async listarProximas(latitude: number, longitude: number, raioKm = 15, nome?: string, clienteId?: string) {
+  async listarProximas(latitude: number, longitude: number, raioKm = 15, nome?: string, clienteId?: string, categoriaFiltro?: string) {
     if (Number.isNaN(latitude) || Number.isNaN(longitude)) {
       throw new BadRequestException("Informe latitude e longitude válidas.");
     }
 
+    // Busca: pelo nome do salão, pelo nome de um serviço ativo ("progressiva")
+    // ou pela ÁREA que o texto pede ("unha", "make", "depilação"...) — ver
+    // categoriasDaBusca. Um filtro explícito de categoria (chips da Home) exige
+    // serviço ativo daquela área.
+    const termo = nome?.trim();
+    const categoriasPedidas = termo ? categoriasDaBusca(termo) : [];
+    const categoriaEscolhida = (CATEGORIAS_SERVICO.map((c) => c.valor) as string[]).includes(categoriaFiltro ?? "")
+      ? (categoriaFiltro as CategoriaServico)
+      : undefined;
+    const condicoes: Prisma.SalaoWhereInput[] = [];
+    if (termo) {
+      condicoes.push({
+        OR: [
+          { nome: { contains: termo } },
+          { servicos: { some: { ativo: true, nome: { contains: termo } } } },
+          ...(categoriasPedidas.length > 0
+            ? [{ servicos: { some: { ativo: true, categoria: { in: categoriasPedidas } } } }]
+            : []),
+        ],
+      });
+    }
+    if (categoriaEscolhida) condicoes.push({ servicos: { some: { ativo: true, categoria: categoriaEscolhida } } });
+    const filtroDeBusca: Prisma.SalaoWhereInput | undefined = condicoes.length > 0 ? { AND: condicoes } : undefined;
+
     const [candidatas, agendamentosDoCliente, autorizacoesDoCliente, { horasCarenciaAposVencimento }] = await Promise.all([
       this.prisma.salao.findMany({
         where: {
-          OR: [
-            { latitude: { not: null }, longitude: { not: null } },
-            { enderecoLatitude: { not: null }, enderecoLongitude: { not: null } },
-            { cidade: { not: null }, uf: { not: null } },
+          AND: [
+            {
+              OR: [
+                { latitude: { not: null }, longitude: { not: null } },
+                { enderecoLatitude: { not: null }, enderecoLongitude: { not: null } },
+                { cidade: { not: null }, uf: { not: null } },
+              ],
+            },
+            ...(filtroDeBusca ? [filtroDeBusca] : []),
           ],
-          ...(nome ? { nome: { contains: nome } } : {}),
         },
         select: {
           ...SELECT_PUBLICO,

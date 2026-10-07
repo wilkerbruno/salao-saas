@@ -51,6 +51,7 @@ export class SaloesController {
     @Query("lng") lng: string,
     @Query("raioKm") raioKm: string | undefined,
     @Query("q") q: string | undefined,
+    @Query("categoria") categoria: string | undefined,
     @CurrentUser() user: AuthUser,
   ) {
     const latitude = Number(lat);
@@ -58,7 +59,7 @@ export class SaloesController {
     if (lat === undefined || lng === undefined || Number.isNaN(latitude) || Number.isNaN(longitude)) {
       throw new BadRequestException("Informe os parâmetros lat e lng.");
     }
-    return this.saloesService.listarProximas(latitude, longitude, raioKm ? Number(raioKm) : undefined, q, user.id);
+    return this.saloesService.listarProximas(latitude, longitude, raioKm ? Number(raioKm) : undefined, q, user.id, categoria);
   }
 
   // Popup de avaliação pós-atendimento (ver PopupAvaliacaoPendente no app) —

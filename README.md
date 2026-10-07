@@ -53,6 +53,10 @@ SaaS) usa o painel web separado, por ser um back-office de uso ocasional.
 - A cliente monta uma reserva com serviços de várias categorias. O sistema encadeia **etapas em sequência** (ex.: escova → manicure), escolhe a profissional de cada área e só mostra horários em que **todas as etapas cabem**. Pacotes que misturam categorias são expandidos por serviço, com preço proporcional.
 - **Ao mesmo tempo:** quando o atendimento tem mais de uma área, a cliente pode escolher "Ao mesmo tempo" (cabelo e unhas juntos, cada um com uma profissional diferente; `simultaneo` na API). Uma profissional nunca atende duas etapas no mesmo horário: se só uma pessoa faz as duas áreas, só a opção "um depois do outro" fica disponível. Serviços da mesma área continuam em fila.
 
+## Busca por área
+
+Na Home do app, a cliente pode digitar o nome do salão **ou o que procura**: "corte de cabelo", "salão" e "salão de beleza" mostram salões com serviço de cabelo; "unha", "nail designer" e "manicure", os de unhas; "make", "make up" e "maquiagem", os de maquiagem; "depilação", "massagem" e "estética", os de estética; "sobrancelha" e "cílios" completam as áreas. Também vale o começo da palavra (3+ letras) e o nome de um serviço cadastrado. Abaixo da busca há chips por área. As palavras ficam em `PALAVRAS_CHAVE_CATEGORIA` (`packages/shared`) e o filtro em `SaloesService.listarProximas`. Só conta serviço **ativo** do salão.
+
 ## Antes de publicar (placeholders)
 
 - Marca/domínio (`Bella One`, `bellaone.store`) são **provisórios**: troque no landing, e-mails, `app.json` e variáveis de ambiente.

@@ -55,6 +55,61 @@ export const CATEGORIAS_SERVICO: {
   { valor: "OUTROS", rotulo: "Outros", perguntaProfissional: "Quem vai te atender?", cargoSugerido: "Profissional" },
 ];
 
+// ---- Busca por área: "unha", "make", "depilação"... encontra salões da categoria ----
+
+// Tira acentos, pontuação e caixa: "Depilação!" -> "depilacao".
+export function normalizarBusca(texto: string): string {
+  return texto
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9 ]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+// Palavras (já sem acento) que o cliente costuma digitar pra cada área. Quem
+// digita uma delas (ou o começo dela, com 3+ letras) vê os salões que têm
+// serviço ativo daquela área. "salão"/"salão de beleza" caem em cabelo.
+export const PALAVRAS_CHAVE_CATEGORIA: Record<CategoriaServico, string[]> = {
+  CABELO: [
+    "cabelo", "cabelos", "corte", "corte de cabelo", "cabeleireira", "cabeleireiro", "cabelereira", "cabelereiro",
+    "salao", "salao de beleza", "hair", "escova", "progressiva", "coloracao", "tintura", "mechas", "luzes",
+    "hidratacao", "penteado", "alisamento", "botox capilar", "cronograma capilar",
+  ],
+  UNHA: [
+    "unha", "unhas", "nail", "nails", "nail designer", "manicure", "pedicure", "esmalte", "esmaltacao",
+    "alongamento de unhas", "gel", "fibra de vidro", "acrigel", "unha de gel", "podologia",
+  ],
+  SOBRANCELHA_CILIOS: [
+    "sobrancelha", "sobrancelhas", "design de sobrancelha", "cilios", "extensao de cilios", "lash", "lash designer",
+    "brow", "henna", "micropigmentacao", "microblading",
+  ],
+  MAQUIAGEM: ["maquiagem", "make", "make up", "makeup", "maquiadora", "maquiador", "automaquiagem", "make noiva", "maquiagem social"],
+  ESTETICA: [
+    "estetica", "esteticista", "depilacao", "depilar", "cera", "laser", "massagem", "limpeza de pele", "drenagem",
+    "peeling", "spa", "bronzeamento", "tratamento facial", "tratamento corporal",
+  ],
+  OUTROS: [],
+};
+
+// Áreas que a busca digitada pelo cliente pede. Vazio = texto comum (nome de
+// salão etc.). Casa se o texto CONTÉM uma palavra-chave inteira ("quero
+// corte de cabelo") ou se é o começo de uma (3+ letras: "unh" -> unha).
+export function categoriasDaBusca(texto: string): CategoriaServico[] {
+  const q = normalizarBusca(texto);
+  if (!q) return [];
+  const achadas: CategoriaServico[] = [];
+  for (const [categoria, palavras] of Object.entries(PALAVRAS_CHAVE_CATEGORIA) as [CategoriaServico, string[]][]) {
+    const casa = palavras.some((p) => {
+      if (` ${q} `.includes(` ${p} `)) return true;
+      return q.length >= 3 && p.startsWith(q);
+    });
+    if (casa) achadas.push(categoria);
+  }
+  return achadas;
+}
+
 export function rotuloCategoria(categoria?: string | null): string {
   return CATEGORIAS_SERVICO.find((c) => c.valor === categoria)?.rotulo ?? "Outros";
 }

@@ -4,10 +4,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import * as Location from "expo-location";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
-import { SalaoProxima } from "@salao-saas/shared";
+import { CategoriaServico, SalaoProxima } from "@salao-saas/shared";
 import { api } from "../../api/client";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
+import { CategoriaChips } from "../../components/CategoriaChips";
 import { StarRating } from "../../components/StarRating";
 import { colors, radius, spacing } from "../../theme/tokens";
 import { HomeStackParamList } from "../../navigation/HomeStack";
@@ -23,6 +24,7 @@ export function HomeScreen({ navigation }: Props) {
   const [estado, setEstado] = useState<Estado>("carregando");
   const [saloes, setSaloes] = useState<SalaoProxima[]>([]);
   const [busca, setBusca] = useState("");
+  const [categoria, setCategoria] = useState<CategoriaServico | undefined>(undefined);
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   const buscarLocalizacao = useCallback(async () => {
@@ -52,7 +54,7 @@ export function HomeScreen({ navigation }: Props) {
     const tempo = setTimeout(async () => {
       try {
         const { data } = await api.get<SalaoProxima[]>("/saloes/proximas", {
-          params: { lat: coords.lat, lng: coords.lng, raioKm: 30, q: busca || undefined },
+          params: { lat: coords.lat, lng: coords.lng, raioKm: 30, q: busca || undefined, categoria },
         });
         if (!cancelado) {
           setSaloes(data);
@@ -66,7 +68,7 @@ export function HomeScreen({ navigation }: Props) {
       cancelado = true;
       clearTimeout(tempo);
     };
-  }, [coords, busca]);
+  }, [coords, busca, categoria]);
 
   if (estado === "carregando") {
     return (
@@ -108,11 +110,17 @@ export function HomeScreen({ navigation }: Props) {
           <TextInput
             value={busca}
             onChangeText={setBusca}
-            placeholder="Buscar pelo nome do salão"
+            placeholder="Buscar salão ou serviço (cabelo, unha, make...)"
             placeholderTextColor={colors.inkMuted}
             style={styles.buscaInput}
           />
         </View>
+        <CategoriaChips
+          valor={categoria}
+          onChange={setCategoria}
+          comTodos
+          categorias={["CABELO", "UNHA", "SOBRANCELHA_CILIOS", "MAQUIAGEM", "ESTETICA"]}
+        />
       </View>
 
       <FlatList
@@ -121,7 +129,9 @@ export function HomeScreen({ navigation }: Props) {
         contentContainerStyle={styles.list}
         ListEmptyComponent={
           <Text style={styles.mensagem}>
-            {busca ? "Nenhum salão encontrada com esse nome." : "Nenhum salão cadastrado perto de você ainda."}
+            {busca || categoria
+              ? "Nenhum salão encontrado para essa busca. Tente outra palavra ou área."
+              : "Nenhum salão cadastrado perto de você ainda."}
           </Text>
         }
         renderItem={({ item }) => (
