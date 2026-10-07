@@ -1,0 +1,20 @@
+{
+  "name": "salao-saas",
+  "private": true,
+  "version": "0.1.0",
+  "description": "SaaS de gestão para saloes: agenda, financeiro, catálogo de serviços/pacotes e cobrança de mensalidade dos saloes assinantes.",
+  "packageManager": "pnpm@9.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build:shared": "pnpm --filter @salao-saas/api exec tsc -p ../../packages/shared/tsconfig.json",
+    "dev:api": "pnpm --filter @salao-saas/api start:dev",
+    "dev:mobile": "pnpm --filter @salao-saas/mobile start",
+    "dev:admin": "pnpm --filter @salao-saas/admin-web dev",
+    "build": "pnpm run build:shared && pnpm -r build",
+    "db:up": "docker compose -f infra/docker-compose.yml up -d",
+    "db:down": "docker compose -f infra/docker-compose.yml down"
+  }
+}

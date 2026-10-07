@@ -1,0 +1,44 @@
+{
+  "expo": {
+    "name": "Bella One",
+    "slug": "salao-saas-app",
+    "scheme": "salaosaas",
+    "version": "0.1.0",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false
+    },
+    "android": {
+      "package": "com.divisionstech.salaosaas",
+      "versionCode": 3,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#161014"
+      },
+      "softwareKeyboardLayoutMode": "resize",
+      "permissions": [
+        "android.permission.REQUEST_INSTALL_PACKAGES"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-notifications"
+    ],
+    "extra": {
+      "eas": {
+        "_comment": "Rode `eas init` dentro de apps/mobile pra criar o projeto do app no Expo e preencher o projectId — sem ele não há push (ver src/utils/push.ts) nem atualização OTA. NÃO reaproveite o projectId de outro app."
+      }
+    }
+  }
+}

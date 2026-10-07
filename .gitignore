@@ -1,0 +1,18 @@
+node_modules/
+apps/*/dist/
+build/
+.expo/
+.next/
+*.log
+.env
+.env.local
+.DS_Store
+prisma/*.db
+coverage/
+
+# Store local do pnpm (cache de pacotes) - nao deve ir pro git
+.pnpm-store/
+
+packages/*/dist/
+*.tsbuildinfo
+.fuse_hidden*
