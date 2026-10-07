@@ -51,7 +51,7 @@ SaaS) usa o painel web separado, por ser um back-office de uso ocasional.
 - Cada serviço tem uma **categoria** (`CABELO`, `UNHAS`, `SOBRANCELHA`, `ESTETICA`, `MAQUIAGEM`…, veja `packages/shared`). Ao cadastrar um salão, a API cria um **catálogo inicial** (`apps/api/src/servicos/catalogo-inicial.ts`) com serviços de cabelo e unhas — os preços são exemplos, ajuste.
 - Cada profissional tem **especialidades** (`Funcionario.especialidades`; vazio = atende tudo).
 - A cliente monta uma reserva com serviços de várias categorias. O sistema encadeia **etapas em sequência** (ex.: escova → manicure), escolhe a profissional de cada área e só mostra horários em que **todas as etapas cabem**. Pacotes que misturam categorias são expandidos por serviço, com preço proporcional.
-- Etapas simultâneas (unha enquanto a cor age) **não** estão implementadas; é uma evolução possível.
+- **Ao mesmo tempo:** quando o atendimento tem mais de uma área, a cliente pode escolher "Ao mesmo tempo" (cabelo e unhas juntos, cada um com uma profissional diferente; `simultaneo` na API). Uma profissional nunca atende duas etapas no mesmo horário: se só uma pessoa faz as duas áreas, só a opção "um depois do outro" fica disponível. Serviços da mesma área continuam em fila.
 
 ## Antes de publicar (placeholders)
 

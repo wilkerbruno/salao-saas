@@ -47,7 +47,7 @@ const NOVO_CARTAO = "novo" as const;
 // (AgendamentosService.criarLote) nem percebe a diferença — sempre recebe um
 // `cartaoToken` de uso único, exatamente como no cartão novo.
 export function CartaoScreen({ route, navigation }: Props) {
-  const { salaoId, inicio, itens, valorCentavos, funcionariosPorCategoria } = route.params;
+  const { salaoId, inicio, itens, valorCentavos, funcionariosPorCategoria, simultaneo } = route.params;
 
   const [publicKey, setPublicKey] = useState<string | null>(null);
   const [carregandoChave, setCarregandoChave] = useState(true);
@@ -275,6 +275,7 @@ export function CartaoScreen({ route, navigation }: Props) {
         inicio,
         itens,
         funcionariosPorCategoria,
+        simultaneo,
         metodoPagamento: "CARTAO",
         cartaoToken,
         cartaoBin,

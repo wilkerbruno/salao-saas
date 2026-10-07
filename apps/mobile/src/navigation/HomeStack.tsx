@@ -35,6 +35,7 @@ export type HomeStackParamList = {
     itens: ItemAgendamentoLote[];
     valorCentavos: number;
     funcionariosPorCategoria?: FuncionariosPorCategoria;
+    simultaneo?: boolean;
   };
   // Cobrança (Pix/Cartão) gerada ao confirmar o agendamento — ver
   // AgendamentosService.criarLote/AgendamentoLoteCriado.

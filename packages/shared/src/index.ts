@@ -432,6 +432,9 @@ export interface CriarAgendamentoLoteInput {
   // cabelo, quem faz as unhas). Vale pros itens sem `funcionarioId` próprio,
   // inclusive serviços de um pacote que mistura categorias.
   funcionariosPorCategoria?: FuncionariosPorCategoria;
+  // true = áreas diferentes (ex: cabelo e unhas) ao mesmo tempo, com profissionais
+  // diferentes. Padrão (false): uma depois da outra.
+  simultaneo?: boolean;
   inicio: string; // ISO datetime
   itens: ItemAgendamentoLote[];
   // Como pagar por esse lote: PIX/CARTAO gera uma cobrança avulsa (ver
@@ -464,6 +467,7 @@ export interface CriarAgendamentoManualInput {
   // (itens[].funcionarioId), ex: cabelo com uma e unha com outra.
   funcionarioId: string;
   funcionariosPorCategoria?: FuncionariosPorCategoria;
+  simultaneo?: boolean;
   inicio: string;
   itens: ItemAgendamentoLote[];
   clienteId?: string; // cliente já cadastrado no app

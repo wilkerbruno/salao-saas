@@ -103,6 +103,8 @@ export function BookingScreen({ route, navigation }: Props) {
   const [carregandoHorarios, setCarregandoHorarios] = useState(false);
   const [horarioSelecionado, setHorarioSelecionado] = useState<string | undefined>();
 
+  // true = cabelo, unhas etc. ao mesmo tempo (profissionais diferentes).
+  const [simultaneo, setSimultaneo] = useState(false);
   const [formaPagamento, setFormaPagamento] = useState<FormaPagamento>(MetodoPagamento.PIX);
   const [enviando, setEnviando] = useState(false);
 
@@ -213,6 +215,9 @@ export function BookingScreen({ route, navigation }: Props) {
     return vistas;
   }, [etapas]);
 
+  // O modo simultâneo só existe quando há mais de uma área no atendimento.
+  const simultaneoAtivo = simultaneo && categoriasDoAtendimento.length > 1;
+
   // Parâmetro `etapas` das consultas de disponibilidade (ver SaloesController.parseEtapas).
   const etapasParam = useMemo(
     () =>
@@ -299,13 +304,13 @@ export function BookingScreen({ route, navigation }: Props) {
     setCarregandoDias(true);
     const mes = `${mesVisivel.ano}-${String(mesVisivel.mes).padStart(2, "0")}`;
     api
-      .get<string[]>(`/saloes/${salaoId}/dias-disponiveis`, { params: { mes, etapas: etapasParam } })
+      .get<string[]>(`/saloes/${salaoId}/dias-disponiveis`, { params: { mes, etapas: etapasParam, simultaneo: simultaneoAtivo ? 1 : undefined } })
       .then(({ data }) => !cancelado && setDiasDisponiveis(data))
       .finally(() => !cancelado && setCarregandoDias(false));
     return () => {
       cancelado = true;
     };
-  }, [salaoId, mesVisivel, etapasParam, etapas.length]);
+  }, [salaoId, mesVisivel, etapasParam, etapas.length, simultaneoAtivo]);
 
   // Recarrega os horários sempre que o dia escolhido ou o atendimento mudam.
   useEffect(() => {
@@ -317,13 +322,13 @@ export function BookingScreen({ route, navigation }: Props) {
     setCarregandoHorarios(true);
     setHorarioSelecionado(undefined);
     api
-      .get<string[]>(`/saloes/${salaoId}/horarios-disponiveis`, { params: { data: diaSelecionado, etapas: etapasParam } })
+      .get<string[]>(`/saloes/${salaoId}/horarios-disponiveis`, { params: { data: diaSelecionado, etapas: etapasParam, simultaneo: simultaneoAtivo ? 1 : undefined } })
       .then(({ data }) => !cancelado && setHorarios(data))
       .finally(() => !cancelado && setCarregandoHorarios(false));
     return () => {
       cancelado = true;
     };
-  }, [salaoId, diaSelecionado, etapasParam, etapas.length]);
+  }, [salaoId, diaSelecionado, etapasParam, etapas.length, simultaneoAtivo]);
 
   const markedDates = useMemo(() => {
     const marcado: Record<string, any> = {};
@@ -373,7 +378,7 @@ export function BookingScreen({ route, navigation }: Props) {
     // formulário nativo (tokeniza e cobra na hora, sem sair do app); é a
     // CartaoScreen quem chama POST /agendamentos/lote depois de tokenizar.
     if (formaPagamento === MetodoPagamento.CARTAO) {
-      navigation.navigate("Cartao", { salaoId, inicio, itens, valorCentavos: precoTotalCentavos, funcionariosPorCategoria });
+      navigation.navigate("Cartao", { salaoId, inicio, itens, valorCentavos: precoTotalCentavos, funcionariosPorCategoria, simultaneo: simultaneoAtivo });
       return;
     }
 
@@ -384,6 +389,7 @@ export function BookingScreen({ route, navigation }: Props) {
         inicio,
         itens,
         funcionariosPorCategoria,
+        simultaneo: simultaneoAtivo,
         metodoPagamento: usandoPacote ? undefined : (formaPagamento as MetodoPagamento),
         usarAssinaturaPacoteId: usandoPacote ? assinaturaElegivel.id : undefined,
       });
@@ -413,14 +419,35 @@ export function BookingScreen({ route, navigation }: Props) {
   const horariosDasEtapas = useMemo(() => {
     if (!horarioSelecionado) return [];
     const [h, m] = horarioSelecionado.split(":").map(Number);
-    let minutos = h * 60 + m;
+    const base = h * 60 + m;
+    // Em sequência há um cursor só; no modo simultâneo, um por área.
+    const cursores: Record<string, number> = {};
+    let cursorUnico = base;
+    const formatar = (t: number) => `${String(Math.floor(t / 60) % 24).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
     return etapas.map((etapa) => {
-      const inicio = minutos;
-      minutos += etapa.duracaoMinutos;
-      const formatar = (t: number) => `${String(Math.floor(t / 60) % 24).padStart(2, "0")}:${String(t % 60).padStart(2, "0")}`;
-      return { inicio: formatar(inicio), fim: formatar(minutos) };
+      const chave = etapa.categoria ?? "_";
+      const inicio = simultaneoAtivo ? (cursores[chave] ?? base) : cursorUnico;
+      const fim = inicio + etapa.duracaoMinutos;
+      if (simultaneoAtivo) cursores[chave] = fim;
+      else cursorUnico = fim;
+      return { inicio: formatar(inicio), fim: formatar(fim), fimMinutos: fim };
     });
-  }, [etapas, horarioSelecionado]);
+  }, [etapas, horarioSelecionado, simultaneoAtivo]);
+
+  // Horário em que o atendimento todo termina (a etapa que acaba por último).
+  const fimDoAtendimento = useMemo(() => {
+    if (horariosDasEtapas.length === 0) return undefined;
+    const ultima = horariosDasEtapas.reduce((a, b) => (b.fimMinutos > a.fimMinutos ? b : a));
+    return ultima.fim;
+  }, [horariosDasEtapas]);
+
+  // Duração do atendimento completo (a mais longa das filas, se simultâneo).
+  const duracaoDoAtendimentoMinutos = useMemo(() => {
+    if (!simultaneoAtivo) return duracaoTotalMinutos;
+    const porArea: Record<string, number> = {};
+    for (const e of etapas) porArea[e.categoria ?? "_"] = (porArea[e.categoria ?? "_"] ?? 0) + e.duracaoMinutos;
+    return Math.max(0, ...Object.values(porArea));
+  }, [simultaneoAtivo, etapas, duracaoTotalMinutos]);
 
   const nomeDaProfissional = (categoria: CategoriaServico | null) => {
     const id = categoria ? profissionaisPorCategoria[categoria] : undefined;
@@ -541,13 +568,44 @@ export function BookingScreen({ route, navigation }: Props) {
           <Card style={styles.resumoCard}>
             <Text style={styles.resumoTexto}>
               {totalItens} {totalItens === 1 ? "item" : "itens"} selecionado{totalItens === 1 ? "" : "s"} · ~
-              {duracaoTotalMinutos} min
+              {duracaoDoAtendimentoMinutos} min
             </Text>
             <Text style={styles.resumoValor}>{centavosParaReais(precoTotalCentavos)}</Text>
           </Card>
         )}
 
         {categoriasDoAtendimento.length > 1 && (
+          <>
+            <Text style={styles.sectionTitle}>Como prefere?</Text>
+            <View style={styles.horariosGrid}>
+              {[
+                { valor: false, label: "Um depois do outro" },
+                { valor: true, label: "Ao mesmo tempo" },
+              ].map((opcao) => (
+                <Pressable
+                  key={opcao.label}
+                  onPress={() => {
+                    setSimultaneo(opcao.valor);
+                    resetarDiaEHorario();
+                  }}
+                >
+                  <View style={[styles.horarioChip, simultaneoAtivo === opcao.valor && styles.horarioChipSelecionado]}>
+                    <Text style={[styles.horarioTexto, simultaneoAtivo === opcao.valor && styles.horarioTextoSelecionado]}>
+                      {opcao.label}
+                    </Text>
+                  </View>
+                </Pressable>
+              ))}
+            </View>
+            <Text style={styles.hint}>
+              {simultaneoAtivo
+                ? "Cada área com uma profissional diferente, ao mesmo tempo — por exemplo, as unhas enquanto o cabelo é feito. Termina mais cedo."
+                : "Um atendimento depois do outro, no mesmo dia."}
+            </Text>
+          </>
+        )}
+
+        {categoriasDoAtendimento.length > 1 && !simultaneoAtivo && (
           <>
             <Text style={styles.sectionTitle}>Começar por</Text>
             <View style={styles.horariosGrid}>
@@ -561,9 +619,7 @@ export function BookingScreen({ route, navigation }: Props) {
                 </Pressable>
               ))}
             </View>
-            <Text style={styles.hint}>
-              Um atendimento depois do outro, no mesmo dia — você escolhe por qual área começar.
-            </Text>
+            <Text style={styles.hint}>Você escolhe por qual área começar.</Text>
           </>
         )}
 
@@ -707,7 +763,7 @@ export function BookingScreen({ route, navigation }: Props) {
               <View style={styles.divisor} />
               <View style={styles.confirmLinha}>
                 <Text style={styles.confirmTotalLabel}>
-                  Total (~{duracaoTotalMinutos} min, termina às {horariosDasEtapas[horariosDasEtapas.length - 1]?.fim})
+                  Total (~{duracaoDoAtendimentoMinutos} min, termina às {fimDoAtendimento})
                 </Text>
                 <Text style={styles.confirmTotalValor}>{centavosParaReais(precoTotalCentavos)}</Text>
               </View>

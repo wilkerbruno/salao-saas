@@ -101,6 +101,7 @@ export class SaloesController {
     @Query("duracaoMinutos") duracaoMinutos?: string,
     @Query("funcionarioId") funcionarioId?: string,
     @Query("etapas") etapas?: string,
+    @Query("simultaneo") simultaneo?: string,
   ) {
     const [ano, mesNum] = (mes ?? "").split("-").map(Number);
     if (!ano || !mesNum) throw new BadRequestException("Informe o parâmetro mes no formato YYYY-MM.");
@@ -111,6 +112,7 @@ export class SaloesController {
       Number(duracaoMinutos) || 30,
       funcionarioId,
       parseEtapas(etapas),
+      simultaneo === "1" || simultaneo === "true",
     );
   }
 
@@ -124,6 +126,7 @@ export class SaloesController {
     @Query("duracaoMinutos") duracaoMinutos?: string,
     @Query("funcionarioId") funcionarioId?: string,
     @Query("etapas") etapas?: string,
+    @Query("simultaneo") simultaneo?: string,
   ) {
     if (!data) throw new BadRequestException("Informe o parâmetro data no formato YYYY-MM-DD.");
     return this.agendamentosService.listarHorariosDisponiveis(
@@ -132,6 +135,7 @@ export class SaloesController {
       Number(duracaoMinutos) || 30,
       funcionarioId,
       parseEtapas(etapas),
+      simultaneo === "1" || simultaneo === "true",
     );
   }
 

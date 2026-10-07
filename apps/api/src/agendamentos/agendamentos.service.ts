@@ -147,7 +147,7 @@ export class AgendamentosService {
     // Cada etapa (cabelo, unha...) ganha a sua profissional — a escolhida pelo
     // cliente pra aquele serviço ou, se ela não escolheu, qualquer uma que
     // atenda a categoria e esteja livre naquele trecho do horário.
-    const plano = await this.planejarEtapas(salaoId, resolvidos, inicio, dto.funcionarioId);
+    const plano = await this.planejarEtapas(salaoId, resolvidos, inicio, dto.funcionarioId, dto.simultaneo === true);
 
     // Antes de exigir pagamento avulso, confere se uma assinatura de pacote
     // mensal ATIVA do cliente já cobre esse lote inteiro (mesmos serviços,
@@ -504,7 +504,7 @@ export class AgendamentosService {
     // `funcionarioId` do corpo é a profissional padrão pros itens sem escolha
     // própria que ela atende.
     const inicio = new Date(dto.inicio);
-    const plano = await this.planejarEtapas(salaoId, resolvidos, inicio, dto.funcionarioId);
+    const plano = await this.planejarEtapas(salaoId, resolvidos, inicio, dto.funcionarioId, dto.simultaneo === true);
 
     // Funcionária só lança na PRÓPRIA agenda — vale pra todas as etapas.
     if (user.papel === Papel.FUNCIONARIO && plano.some((e) => e.funcionarioId !== dto.funcionarioId)) {
@@ -705,13 +705,14 @@ export class AgendamentosService {
     duracaoMinutos: number,
     funcionarioId?: string,
     etapas?: EtapaDisponibilidade[],
+    simultaneo = false,
   ) {
     const inicioMes = new Date(ano, mes - 1, 1, 0, 0, 0, 0);
     const inicioProximoMes = new Date(ano, mes, 1, 0, 0, 0, 0);
     const consulta = montarConsulta(duracaoMinutos, funcionarioId, etapas);
     // folga/agenda precisam cobrir também as etapas que passam da meia-noite do
     // último dia (raro, mas não custa).
-    const fimJanela = addMinutos(inicioProximoMes, consulta.reduce((t, e) => t + e.duracaoMinutos, 0));
+    const fimJanela = addMinutos(inicioProximoMes, duracaoDoAtendimento(consulta, simultaneo));
 
     const funcionarios = await this.funcionariosComAgenda(salaoId, inicioMes, fimJanela);
     if (funcionarios.length === 0) return [];
@@ -724,7 +725,7 @@ export class AgendamentosService {
 
     const dias: string[] = [];
     for (let dia = new Date(inicioMes); dia < inicioProximoMes; dia.setDate(dia.getDate() + 1)) {
-      if (this.iniciosPossiveisNoDia(funcionarios, agendamentos, consulta, dia, agora).length > 0) dias.push(formatarData(dia));
+      if (this.iniciosPossiveisNoDia(funcionarios, agendamentos, consulta, dia, agora, simultaneo).length > 0) dias.push(formatarData(dia));
     }
     return dias;
   }
@@ -738,12 +739,13 @@ export class AgendamentosService {
     duracaoMinutos: number,
     funcionarioId?: string,
     etapas?: EtapaDisponibilidade[],
+    simultaneo = false,
   ) {
     const dia = new Date(`${data}T00:00:00`);
     const proximoDia = new Date(dia);
     proximoDia.setDate(proximoDia.getDate() + 1);
     const consulta = montarConsulta(duracaoMinutos, funcionarioId, etapas);
-    const fimJanela = addMinutos(proximoDia, consulta.reduce((t, e) => t + e.duracaoMinutos, 0));
+    const fimJanela = addMinutos(proximoDia, duracaoDoAtendimento(consulta, simultaneo));
 
     const funcionarios = await this.funcionariosComAgenda(salaoId, dia, fimJanela);
     if (funcionarios.length === 0) return [];
@@ -753,7 +755,7 @@ export class AgendamentosService {
       fimJanela,
     );
 
-    return this.iniciosPossiveisNoDia(funcionarios, agendamentos, consulta, dia, new Date());
+    return this.iniciosPossiveisNoDia(funcionarios, agendamentos, consulta, dia, new Date(), simultaneo);
   }
 
   // Candidatos a início = horários em que alguma profissional QUALIFICADA pra
@@ -765,35 +767,29 @@ export class AgendamentosService {
     consulta: EtapaConsulta[],
     dia: Date,
     agora: Date,
+    simultaneo = false,
   ): string[] {
-    const primeira = consulta[0];
-    const candidatas = funcionarios.filter(
-      (f) => (!primeira.funcionarioId || f.id === primeira.funcionarioId) && funcionariaAtende(f, primeira.categoria),
-    );
+    // Em sequência, o atendimento começa quando a primeira etapa começa; no
+    // modo simultâneo qualquer etapa pode "puxar" o horário de início.
+    const etapasParaInicio = simultaneo ? consulta : [consulta[0]];
 
     const candidatosDeInicio = new Map<number, Date>();
-    for (const funcionaria of candidatas) {
-      for (const slot of slotsDoFuncionarioNoDia(funcionaria, dia, primeira.duracaoMinutos)) {
-        candidatosDeInicio.set(slot.inicio.getTime(), slot.inicio);
+    for (const etapa of etapasParaInicio) {
+      const candidatas = funcionarios.filter(
+        (f) => (!etapa.funcionarioId || f.id === etapa.funcionarioId) && funcionariaAtende(f, etapa.categoria),
+      );
+      for (const funcionaria of candidatas) {
+        for (const slot of slotsDoFuncionarioNoDia(funcionaria, dia, etapa.duracaoMinutos)) {
+          candidatosDeInicio.set(slot.inicio.getTime(), slot.inicio);
+        }
       }
     }
 
     const horarios: string[] = [];
     for (const inicio of Array.from(candidatosDeInicio.values()).sort((a, b) => a.getTime() - b.getTime())) {
       if (inicio <= agora) continue;
-
-      let cursor = inicio;
-      const cabe = consulta.every((etapa) => {
-        const inicioEtapa = cursor;
-        const fimEtapa = addMinutos(inicioEtapa, etapa.duracaoMinutos);
-        cursor = fimEtapa;
-        return funcionarios.some(
-          (f) =>
-            (!etapa.funcionarioId || f.id === etapa.funcionarioId) &&
-            !motivoIndisponivel(f, agendamentos, etapa.categoria, inicioEtapa, fimEtapa),
-        );
-      });
-      if (cabe) horarios.push(formatarHorario(inicio));
+      const trechos = trechosDasEtapas(consulta, inicio, simultaneo);
+      if (!("motivo" in this.alocarEtapas(funcionarios, agendamentos, consulta, trechos))) horarios.push(formatarHorario(inicio));
     }
     return horarios;
   }
@@ -1212,9 +1208,9 @@ export class AgendamentosService {
     etapas: ItemResolvido[],
     inicio: Date,
     funcionarioPreferidaId?: string,
+    simultaneo = false,
   ): Promise<EtapaPlanejada[]> {
-    const duracaoTotal = etapas.reduce((total, e) => total + e.duracaoMinutos, 0);
-    const fimTotal = addMinutos(inicio, duracaoTotal);
+    const fimTotal = addMinutos(inicio, duracaoDoAtendimento(etapas, simultaneo));
 
     const funcionarios = await this.funcionariosComAgenda(salaoId, inicio, fimTotal);
     const agendamentos = await this.buscarAgendamentosNoIntervalo(
@@ -1235,24 +1231,53 @@ export class AgendamentosService {
       throw new BadRequestException("Profissional indisponível para agendamento.");
     }
 
-    const plano: EtapaPlanejada[] = [];
-    let cursor = inicio;
-    for (const etapa of etapas) {
-      const inicioEtapa = cursor;
-      const fimEtapa = addMinutos(inicioEtapa, etapa.duracaoMinutos);
-      cursor = fimEtapa;
+    const trechos = trechosDasEtapas(etapas, inicio, simultaneo);
+    const alocacao = this.alocarEtapas(funcionarios, agendamentos, etapas, trechos, funcionarioPreferidaId);
+    if ("motivo" in alocacao) throw new BadRequestException(alocacao.motivo);
 
+    return etapas.map((etapa, i) => ({
+      ...etapa,
+      funcionarioId: alocacao.ids[i],
+      inicio: trechos[i].inicio,
+      fim: trechos[i].fim,
+    }));
+  }
+
+  // Escolhe a profissional de cada etapa. Uma profissional nunca fica com duas
+  // etapas ao mesmo tempo (no modo simultâneo isso é o que força cabelo e
+  // unha a irem para pessoas diferentes). As etapas mais restritas (menos
+  // candidatas) são decididas primeiro, pra uma escolha "gulosa" não tomar a
+  // única manicure livre de outra etapa.
+  private alocarEtapas(
+    funcionarios: FuncionarioComAgenda[],
+    agendamentos: { funcionarioId: string; inicio: Date; fim: Date }[],
+    etapas: EtapaConsulta[],
+    trechos: { inicio: Date; fim: Date }[],
+    funcionarioPreferidaId?: string,
+  ): { ids: string[] } | { motivo: string } {
+    const ocupados = [...agendamentos];
+    const ids: string[] = new Array(etapas.length);
+    const ordem = etapas
+      .map((etapa, i) => ({
+        i,
+        n: etapa.funcionarioId ? 1 : funcionarios.filter((f) => funcionariaAtende(f, etapa.categoria)).length,
+      }))
+      .sort((a, b) => a.n - b.n || a.i - b.i);
+
+    for (const { i } of ordem) {
       const escolhida = this.escolherFuncionariaParaEtapa(
         funcionarios,
-        agendamentos,
-        etapa,
-        inicioEtapa,
-        fimEtapa,
+        ocupados,
+        etapas[i],
+        trechos[i].inicio,
+        trechos[i].fim,
         funcionarioPreferidaId,
       );
-      plano.push({ ...etapa, funcionarioId: escolhida, inicio: inicioEtapa, fim: fimEtapa });
+      if ("motivo" in escolhida) return escolhida;
+      ids[i] = escolhida.id;
+      ocupados.push({ funcionarioId: escolhida.id, inicio: trechos[i].inicio, fim: trechos[i].fim });
     }
-    return plano;
+    return { ids };
   }
 
   private escolherFuncionariaParaEtapa(
@@ -1262,13 +1287,12 @@ export class AgendamentosService {
     inicio: Date,
     fim: Date,
     funcionarioPreferidaId?: string,
-  ): string {
+  ): { id: string } | { motivo: string } {
     // Escolha explícita: precisa dar certo com ela, senão explica o motivo.
     if (etapa.funcionarioId) {
       const funcionaria = funcionarios.find((f) => f.id === etapa.funcionarioId)!;
       const motivo = motivoIndisponivel(funcionaria, agendamentos, etapa.categoria, inicio, fim);
-      if (motivo) throw new BadRequestException(motivo);
-      return funcionaria.id;
+      return motivo ? { motivo } : { id: funcionaria.id };
     }
 
     const candidatas = funcionarios.filter((f) => funcionariaAtende(f, etapa.categoria));
@@ -1276,15 +1300,16 @@ export class AgendamentosService {
     candidatas.sort((a, b) => Number(b.id === funcionarioPreferidaId) - Number(a.id === funcionarioPreferidaId));
 
     for (const candidata of candidatas) {
-      if (!motivoIndisponivel(candidata, agendamentos, etapa.categoria, inicio, fim)) return candidata.id;
+      if (!motivoIndisponivel(candidata, agendamentos, etapa.categoria, inicio, fim)) return { id: candidata.id };
     }
 
     const area = etapa.categoria ? ` de ${rotuloCategoria(etapa.categoria).toLowerCase()}` : "";
-    throw new BadRequestException(
-      candidatas.length === 0
-        ? `Este salão ainda não tem profissional${area} cadastrada. Escolha outro serviço ou fale com o salão.`
-        : `Nenhuma profissional${area} livre às ${formatarHorario(inicio)}. Escolha outro horário.`,
-    );
+    return {
+      motivo:
+        candidatas.length === 0
+          ? `Este salão ainda não tem profissional${area} cadastrada. Escolha outro serviço ou fale com o salão.`
+          : `Nenhuma profissional${area} livre às ${formatarHorario(inicio)}. Escolha outro horário.`,
+    };
   }
 
   private buscarAgendamentosNoIntervalo(funcionarioIds: string[], inicio: Date, fim: Date) {
@@ -1412,6 +1437,37 @@ function montarConsulta(duracaoMinutos: number, funcionarioId?: string, etapas?:
     }));
   }
   return [{ duracaoMinutos, categoria: null, funcionarioId: funcionarioId || undefined }];
+}
+
+// Início/fim de cada etapa. Em sequência, uma começa quando a anterior termina.
+// No modo simultâneo, as etapas de categorias DIFERENTES começam juntas (cada
+// uma com a sua profissional) e só as da mesma categoria seguem em fila.
+function trechosDasEtapas(
+  etapas: { duracaoMinutos: number; categoria: CategoriaServico | null }[],
+  inicio: Date,
+  simultaneo: boolean,
+): { inicio: Date; fim: Date }[] {
+  const cursores = new Map<string, Date>();
+  let cursorUnico = inicio;
+  return etapas.map((etapa) => {
+    const chave = simultaneo ? (etapa.categoria ?? "_") : "_";
+    const comeco = simultaneo ? (cursores.get(chave) ?? inicio) : cursorUnico;
+    const fim = addMinutos(comeco, etapa.duracaoMinutos);
+    if (simultaneo) cursores.set(chave, fim);
+    else cursorUnico = fim;
+    return { inicio: comeco, fim };
+  });
+}
+
+// Duração total do atendimento: soma (em sequência) ou a mais longa das
+// "filas" por categoria (simultâneo).
+function duracaoDoAtendimento(
+  etapas: { duracaoMinutos: number; categoria: CategoriaServico | null }[],
+  simultaneo: boolean,
+): number {
+  const base = new Date(0);
+  const trechos = trechosDasEtapas(etapas, base, simultaneo);
+  return Math.max(...trechos.map((t) => (t.fim.getTime() - base.getTime()) / 60_000));
 }
 
 function slotLivre(

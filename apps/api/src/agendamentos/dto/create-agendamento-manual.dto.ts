@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { ArrayMinSize, IsArray, IsDateString, IsEnum, IsObject, IsOptional, IsString, ValidateIf, ValidateNested } from "class-validator";
+import { ArrayMinSize, IsArray, IsBoolean, IsDateString, IsEnum, IsObject, IsOptional, IsString, ValidateIf, ValidateNested } from "class-validator";
 import { MetodoPagamento } from "@salao-saas/shared";
 
 class ItemAgendamentoManualDto {
@@ -34,6 +34,12 @@ export class CreateAgendamentoManualDto {
   @IsOptional()
   @IsObject()
   funcionariosPorCategoria?: Record<string, string>;
+
+  // true = serviços de áreas diferentes (ex: cabelo e unhas) acontecem AO MESMO
+  // TEMPO, cada um com uma profissional diferente. Padrão: um depois do outro.
+  @IsOptional()
+  @IsBoolean()
+  simultaneo?: boolean;
 
   @IsArray()
   @ArrayMinSize(1)
