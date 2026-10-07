@@ -50,7 +50,7 @@ export default function SaloesPage() {
                 <td>{b.assinatura?.status ?? "—"}</td>
                 <td>
                   {b.visibilidadeRestrita ? (
-                    <span style={{ color: "#b04a6c", fontWeight: 700, fontSize: 12 }}>🔒 Teste</span>
+                    <span style={{ color: "#b04a6c", fontWeight: 700, fontSize: 12 }}>Teste</span>
                   ) : (
                     <span style={{ color: "#837A73", fontSize: 12 }}>Normal</span>
                   )}

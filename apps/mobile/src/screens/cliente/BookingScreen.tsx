@@ -12,7 +12,6 @@ import {
   CATEGORIAS_SERVICO,
   CategoriaServico,
   centavosParaReais,
-  emojiCategoria,
   etapasDoPacote,
   FuncionariosPorCategoria,
   FuncionarioPublico as FuncionarioPublicoBase,
@@ -451,7 +450,7 @@ export function BookingScreen({ route, navigation }: Props) {
             {CATEGORIAS_SERVICO.filter((c) => servicosVisiveis.some((s) => s.categoria === c.valor)).map((categoria) => (
               <View key={categoria.valor} style={{ gap: spacing.sm }}>
                 <Text style={styles.sectionTitle}>
-                  {categoria.emoji} {categoria.rotulo}
+                  {categoria.rotulo}
                 </Text>
                 {servicosVisiveis
                   .filter((s) => s.categoria === categoria.valor)
@@ -483,7 +482,7 @@ export function BookingScreen({ route, navigation }: Props) {
 
             {pacotesVisiveis.length > 0 && (
               <>
-                <Text style={styles.sectionTitle}>✨ Combos</Text>
+                <Text style={styles.sectionTitle}>Combos</Text>
                 <View style={{ gap: spacing.sm }}>
                   {pacotesVisiveis.map((p) => {
                     const quantidade = quantidadesPacotes[p.id] ?? 0;
@@ -492,7 +491,7 @@ export function BookingScreen({ route, navigation }: Props) {
                       <Card key={p.id} style={styles.servicoLinha}>
                         <View style={{ flex: 1 }}>
                           <Text style={styles.itemNome}>
-                            {areas.map((c) => emojiCategoria(c)).join(" ")} {p.nome}
+                            {p.nome}
                           </Text>
                           <Text style={styles.itemMeta}>
                             {duracaoDoPacote(p)} min · {centavosParaReais(p.precoCentavos)}
@@ -556,7 +555,7 @@ export function BookingScreen({ route, navigation }: Props) {
                 <Pressable key={categoria} onPress={() => comecarPor(categoria)}>
                   <View style={[styles.horarioChip, indice === 0 && styles.horarioChipSelecionado]}>
                     <Text style={[styles.horarioTexto, indice === 0 && styles.horarioTextoSelecionado]}>
-                      {emojiCategoria(categoria)} {rotuloCategoria(categoria)}
+                      {rotuloCategoria(categoria)}
                     </Text>
                   </View>
                 </Pressable>
@@ -575,7 +574,7 @@ export function BookingScreen({ route, navigation }: Props) {
           return (
             <View key={categoria} style={{ gap: spacing.sm }}>
               <Text style={styles.sectionTitle}>
-                {info.emoji} {info.perguntaProfissional}
+                {info.perguntaProfissional}
               </Text>
               {doTime.length === 0 ? (
                 <Text style={styles.hint}>
@@ -684,7 +683,6 @@ export function BookingScreen({ route, navigation }: Props) {
                       <Text style={styles.etapaHora}>{horariosDasEtapas[indice]?.inicio}</Text>
                       <View style={{ flex: 1 }}>
                         <Text style={styles.confirmServico}>
-                          {etapa.categoria ? `${emojiCategoria(etapa.categoria)} ` : ""}
                           {etapa.nome}
                         </Text>
                         <Text style={styles.itemMeta}>

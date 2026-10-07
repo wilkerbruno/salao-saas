@@ -10,7 +10,6 @@ import {
   CATEGORIAS_SERVICO,
   CategoriaServico,
   centavosParaReais,
-  emojiCategoria,
   etapasDoPacote,
   FuncionarioDetalhado,
   MetodoPagamento,
@@ -295,7 +294,7 @@ export function AgendarManualScreen({ navigation }: Props) {
               <Card key={s.id} style={styles.servicoLinha}>
                 <View style={{ flex: 1 }}>
                   <Text style={styles.itemNome}>
-                    {emojiCategoria(s.categoria)} {s.nome}
+                    {s.nome}
                   </Text>
                   <Text style={styles.itemMeta}>
                     {s.duracaoMinutos} min · {centavosParaReais(s.precoCentavos)}

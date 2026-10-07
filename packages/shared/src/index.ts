@@ -42,26 +42,21 @@ export type CategoriaServico = (typeof CategoriaServico)[keyof typeof CategoriaS
 export const CATEGORIAS_SERVICO: {
   valor: CategoriaServico;
   rotulo: string;
-  emoji: string;
   // "Quem vai cuidar do seu cabelo?" — título do passo de escolher profissional
   perguntaProfissional: string;
   // cargo sugerido ao cadastrar uma profissional dessa área
   cargoSugerido: string;
 }[] = [
-  { valor: "CABELO", rotulo: "Cabelo", emoji: "💇‍♀️", perguntaProfissional: "Quem vai cuidar do seu cabelo?", cargoSugerido: "Cabeleireira" },
-  { valor: "UNHA", rotulo: "Unhas", emoji: "💅", perguntaProfissional: "Quem vai fazer suas unhas?", cargoSugerido: "Manicure" },
-  { valor: "SOBRANCELHA_CILIOS", rotulo: "Sobrancelha e cílios", emoji: "👁️", perguntaProfissional: "Quem vai cuidar do seu olhar?", cargoSugerido: "Designer de sobrancelhas" },
-  { valor: "MAQUIAGEM", rotulo: "Maquiagem", emoji: "💄", perguntaProfissional: "Quem vai fazer sua maquiagem?", cargoSugerido: "Maquiadora" },
-  { valor: "ESTETICA", rotulo: "Estética e depilação", emoji: "🌸", perguntaProfissional: "Quem vai fazer seu tratamento?", cargoSugerido: "Esteticista" },
-  { valor: "OUTROS", rotulo: "Outros", emoji: "✨", perguntaProfissional: "Quem vai te atender?", cargoSugerido: "Profissional" },
+  { valor: "CABELO", rotulo: "Cabelo", perguntaProfissional: "Quem vai cuidar do seu cabelo?", cargoSugerido: "Cabeleireira" },
+  { valor: "UNHA", rotulo: "Unhas", perguntaProfissional: "Quem vai fazer suas unhas?", cargoSugerido: "Manicure" },
+  { valor: "SOBRANCELHA_CILIOS", rotulo: "Sobrancelha e cílios", perguntaProfissional: "Quem vai cuidar do seu olhar?", cargoSugerido: "Designer de sobrancelhas" },
+  { valor: "MAQUIAGEM", rotulo: "Maquiagem", perguntaProfissional: "Quem vai fazer sua maquiagem?", cargoSugerido: "Maquiadora" },
+  { valor: "ESTETICA", rotulo: "Estética e depilação", perguntaProfissional: "Quem vai fazer seu tratamento?", cargoSugerido: "Esteticista" },
+  { valor: "OUTROS", rotulo: "Outros", perguntaProfissional: "Quem vai te atender?", cargoSugerido: "Profissional" },
 ];
 
 export function rotuloCategoria(categoria?: string | null): string {
   return CATEGORIAS_SERVICO.find((c) => c.valor === categoria)?.rotulo ?? "Outros";
-}
-
-export function emojiCategoria(categoria?: string | null): string {
-  return CATEGORIAS_SERVICO.find((c) => c.valor === categoria)?.emoji ?? "✨";
 }
 
 // Uma profissional sem especialidades cadastradas (null/vazio) atende TODAS as

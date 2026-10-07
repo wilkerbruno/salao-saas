@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
 import { alertar } from "../../utils/alertaCompat";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
-import { CATEGORIAS_SERVICO, CategoriaServico, centavosParaReais, emojiCategoria, rotuloCategoria, Servico } from "@salao-saas/shared";
+import { CATEGORIAS_SERVICO, CategoriaServico, centavosParaReais, rotuloCategoria, Servico } from "@salao-saas/shared";
 import { api } from "../../api/client";
 import { useAuthStore } from "../../store/authStore";
 import { Button } from "../../components/Button";
@@ -166,7 +166,7 @@ export function ServicosScreen() {
           <>
             {(index === 0 || servicos[index - 1].categoria !== item.categoria) && (
               <Text style={styles.secao}>
-                {emojiCategoria(item.categoria)} {rotuloCategoria(item.categoria)}
+                {rotuloCategoria(item.categoria)}
               </Text>
             )}
           <Card style={{ marginBottom: spacing.sm, gap: spacing.xs, opacity: item.ativo ? 1 : 0.5 }}>

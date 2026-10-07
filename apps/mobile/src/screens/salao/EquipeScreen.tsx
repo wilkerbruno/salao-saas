@@ -4,7 +4,7 @@ import { alertar } from "../../utils/alertaCompat";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { CategoriaServico, emojiCategoria, FuncionarioDetalhado, rotuloCategoria } from "@salao-saas/shared";
+import { CategoriaServico, FuncionarioDetalhado, rotuloCategoria } from "@salao-saas/shared";
 import { api } from "../../api/client";
 import { useAuthStore } from "../../store/authStore";
 import { Button } from "../../components/Button";
@@ -22,7 +22,7 @@ const FUNCIONARIO_VAZIO = { nome: "", email: "", senha: "", telefone: "", cargo:
 // Texto de "em quais áreas ela atua" — vazio/null = faz de tudo (ver atendeCategoria).
 function textoAreas(especialidades?: CategoriaServico[] | null): string {
   if (!especialidades || especialidades.length === 0) return "Atende todas as áreas";
-  return especialidades.map((c) => `${emojiCategoria(c)} ${rotuloCategoria(c)}`).join(" · ");
+  return especialidades.map((c) => `$${rotuloCategoria(c)}`).join(" · ");
 }
 
 interface Assinatura {

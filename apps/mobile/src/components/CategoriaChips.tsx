@@ -27,7 +27,7 @@ export function CategoriaChips({
       {opcoes.map((c) => (
         <Chip
           key={c.valor}
-          rotulo={`${c.emoji} ${c.rotulo}`}
+          rotulo={`${c.rotulo}`}
           selecionado={valor === c.valor}
           onPress={() => onChange(c.valor)}
         />
@@ -53,7 +53,7 @@ export function CategoriaChipsMulti({
         return (
           <Chip
             key={c.valor}
-            rotulo={`${c.emoji} ${c.rotulo}`}
+            rotulo={`${c.rotulo}`}
             selecionado={selecionado}
             onPress={() => onChange(selecionado ? valores.filter((v) => v !== c.valor) : [...valores, c.valor])}
           />

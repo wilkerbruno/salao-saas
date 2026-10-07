@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
-import { Agendamento, emojiCategoria, FuncionarioDetalhado, MetodoPagamento, StatusAgendamento, StatusPagamento } from "@salao-saas/shared";
+import { Agendamento, FuncionarioDetalhado, MetodoPagamento, StatusAgendamento, StatusPagamento } from "@salao-saas/shared";
 import { api } from "../../api/client";
 import { Card } from "../../components/Card";
 import { PriceTag } from "../../components/PriceTag";
@@ -129,7 +129,6 @@ export function SalaoAgendaScreen({ navigation }: Props) {
               <StatusBadge status={item.status} />
             </View>
             <Text style={styles.meta}>
-              {item.servico ? `${emojiCategoria(item.servico.categoria)} ` : ""}
               {item.servico?.nome ?? item.pacote?.nome ?? "Serviço"}
             </Text>
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>

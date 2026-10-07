@@ -268,7 +268,7 @@ export function AssinarPacoteScreen({ route, navigation }: Props) {
       return (
         <SafeAreaView style={styles.center}>
           <View style={[styles.iconeCircle, { backgroundColor: colors.accentSoft }]}>
-            <Text style={{ fontSize: 32 }}>{automaticoStatus === "ATIVA" ? "✓" : "⏳"}</Text>
+            <Text style={{ fontSize: 32 }}>{automaticoStatus === "ATIVA" ? "✓" : "…"}</Text>
           </View>
           <Text style={styles.tituloSucesso}>
             {automaticoStatus === "ATIVA" ? "Assinatura ativada!" : "Confirmando com o Mercado Pago…"}

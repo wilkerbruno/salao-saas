@@ -3,7 +3,7 @@ import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { Agendamento, centavosParaReais, emojiCategoria, StatusAgendamento } from "@salao-saas/shared";
+import { Agendamento, centavosParaReais, StatusAgendamento } from "@salao-saas/shared";
 import { api } from "../../api/client";
 import { Card } from "../../components/Card";
 import { StatusBadge } from "../../components/StatusBadge";
@@ -105,7 +105,6 @@ export function BookingsScreen() {
               <View style={{ gap: 2 }}>
                 {visita.map((item) => (
                   <Text key={item.id} style={styles.itemServico}>
-                    {item.servico ? `${emojiCategoria(item.servico.categoria)} ` : ""}
                     {item.servico?.nome ?? item.pacote?.nome ?? "Serviço"}
                     {item.funcionario?.usuario?.nome ? ` · com ${item.funcionario.usuario.nome}` : ""}
                   </Text>

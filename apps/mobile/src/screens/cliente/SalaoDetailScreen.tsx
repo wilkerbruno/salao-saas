@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, Pressable, StyleSheet, Text, TextInput, Vi
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
-import { Avaliacao, CATEGORIAS_SERVICO, emojiCategoria, SalaoPublica, Pacote, PacoteMensal, Servico } from "@salao-saas/shared";
+import { Avaliacao, CATEGORIAS_SERVICO, SalaoPublica, Pacote, PacoteMensal, Servico } from "@salao-saas/shared";
 import { api } from "../../api/client";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
@@ -163,7 +163,7 @@ export function SalaoDetailScreen({ route, navigation }: Props) {
             {CATEGORIAS_SERVICO.filter((c) => servicos.some((s) => s.categoria === c.valor)).map((categoria) => (
             <View key={categoria.valor} style={{ gap: spacing.sm }}>
               <Text style={styles.sectionTitle}>
-                {categoria.emoji} {categoria.rotulo}
+                {categoria.rotulo}
               </Text>
               {servicos.filter((s) => s.categoria === categoria.valor).map((item) => {
                 const selecionado = servicosSelecionados.has(item.id);
@@ -196,7 +196,7 @@ export function SalaoDetailScreen({ route, navigation }: Props) {
 
             {pacotes.length > 0 && (
               <View style={{ gap: spacing.sm }}>
-                <Text style={styles.sectionTitle}>✨ Combos (mais de uma área no mesmo horário)</Text>
+                <Text style={styles.sectionTitle}>Combos (mais de uma área no mesmo horário)</Text>
                 {pacotes.map((pacote) => {
                   const selecionado = pacotesSelecionados.has(pacote.id);
                   return (
@@ -210,9 +210,6 @@ export function SalaoDetailScreen({ route, navigation }: Props) {
                               color={selecionado ? colors.accent : colors.border}
                             />
                             <Text style={styles.itemName}>
-                              {Array.from(new Set(pacote.servicos.map((ps) => ps.servico.categoria)))
-                                .map((c) => emojiCategoria(c))
-                                .join(" ")}{" "}
                               {pacote.nome}
                             </Text>
                           </View>

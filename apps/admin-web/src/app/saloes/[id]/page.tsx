@@ -274,7 +274,7 @@ export default function SalaoDetalhePage() {
 
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 14 }}>
           <span style={{ fontSize: 13, fontWeight: 700 }}>
-            {salao.visibilidadeRestrita ? "🔒 Modo teste ativado" : "Visível normalmente pra todo mundo"}
+            {salao.visibilidadeRestrita ? "Modo teste ativado" : "Visível normalmente pra todo mundo"}
           </span>
           <button disabled={autorizando} onClick={alternarVisibilidade} style={salao.visibilidadeRestrita ? btnSecondary : btnPrimary}>
             {salao.visibilidadeRestrita ? "Desativar modo teste" : "Ativar modo teste"}
