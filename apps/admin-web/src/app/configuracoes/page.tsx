@@ -65,11 +65,11 @@ export default function ConfiguracoesPage() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800 }}>Configurações</h1>
-      <p style={{ color: "#837A73", fontSize: 13 }}>Parâmetros globais do SaaS — valem para todas os salões</p>
+      <p style={{ color: "#8A766B", fontSize: 13 }}>Parâmetros globais do SaaS — valem para todas os salões</p>
 
       <form onSubmit={salvar} style={{ ...cardStyle, marginTop: 24, maxWidth: 480, display: "flex", flexDirection: "column", gap: 18 }}>
-        {erro && <div style={{ color: "#b04a6c", fontSize: 13 }}>{erro}</div>}
-        {salvo && <div style={{ color: "#3E7A4D", fontSize: 13 }}>Configurações salvas.</div>}
+        {erro && <div style={{ color: "#A8782A", fontSize: 13 }}>{erro}</div>}
+        {salvo && <div style={{ color: "#3F8F62", fontSize: 13 }}>Configurações salvas.</div>}
 
         <div>
           <label style={labelStyle}>Duração do teste grátis (dias)</label>
@@ -126,8 +126,8 @@ export default function ConfiguracoesPage() {
   );
 }
 
-const cardStyle: React.CSSProperties = { border: "1px solid #DEDAD4", borderRadius: 16, padding: 22, background: "white" };
+const cardStyle: React.CSSProperties = { border: "1px solid #EBD2C9", borderRadius: 16, padding: 22, background: "#FFFAF8" };
 const labelStyle: React.CSSProperties = { display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 };
-const inputStyle: React.CSSProperties = { border: "1px solid #DEDAD4", borderRadius: 9, padding: "10px 12px", fontSize: 14, width: 140 };
-const hintStyle: React.CSSProperties = { fontSize: 12, color: "#837A73", marginTop: 6, lineHeight: 1.5 };
-const btnPrimary: React.CSSProperties = { border: "none", borderRadius: 9, padding: "9px 14px", fontWeight: 700, fontSize: 13, cursor: "pointer", background: "#b04a6c", color: "white" };
+const inputStyle: React.CSSProperties = { border: "1px solid #EBD2C9", borderRadius: 9, padding: "10px 12px", fontSize: 14, width: 140 };
+const hintStyle: React.CSSProperties = { fontSize: 12, color: "#8A766B", marginTop: 6, lineHeight: 1.5 };
+const btnPrimary: React.CSSProperties = { border: "none", borderRadius: 9, padding: "9px 14px", fontWeight: 700, fontSize: 13, cursor: "pointer", background: "#A8782A", color: "white" };

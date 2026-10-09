@@ -40,7 +40,7 @@ export default function FaturamentoPage() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800 }}>Faturamento</h1>
-      <p style={{ color: "#837A73", fontSize: 13 }}>Cobranças recorrentes dos salões assinantes, via Mercado Pago</p>
+      <p style={{ color: "#8A766B", fontSize: 13 }}>Cobranças recorrentes dos salões assinantes, via Mercado Pago</p>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 20 }}>
         <StatCard label="Recebido" value={centavosParaReais(totais.paga)} />
@@ -54,14 +54,14 @@ export default function FaturamentoPage() {
             key={f}
             onClick={() => setFiltro(f)}
             style={{
-              border: "1px solid #DEDAD4",
+              border: "1px solid #EBD2C9",
               borderRadius: 999,
               padding: "6px 14px",
               fontSize: 12,
               fontWeight: 700,
               cursor: "pointer",
-              background: filtro === f ? "#b04a6c" : "white",
-              color: filtro === f ? "white" : "#2A2420",
+              background: filtro === f ? "#A8782A" : "white",
+              color: filtro === f ? "white" : "#4B3A31",
             }}
           >
             {f === "TODAS" ? "Todas" : f.charAt(0) + f.slice(1).toLowerCase()}
@@ -69,7 +69,7 @@ export default function FaturamentoPage() {
         ))}
       </div>
 
-      <div style={{ border: "1px solid #DEDAD4", borderRadius: 14, background: "white", marginTop: 16, overflow: "hidden" }}>
+      <div style={{ border: "1px solid #EBD2C9", borderRadius: 14, background: "#FFFAF8", marginTop: 16, overflow: "hidden" }}>
         <table>
           <thead>
             <tr>
@@ -83,7 +83,7 @@ export default function FaturamentoPage() {
           <tbody>
             {visiveis.length === 0 && (
               <tr>
-                <td colSpan={5} style={{ color: "#837A73", textAlign: "center" }}>
+                <td colSpan={5} style={{ color: "#8A766B", textAlign: "center" }}>
                   Nenhuma fatura ainda.
                 </td>
               </tr>
@@ -108,14 +108,14 @@ function StatCard({ label, value, destaque }: { label: string; value: string; de
   return (
     <div
       style={{
-        border: `1px solid ${destaque ? "#E3B6A8" : "#DEDAD4"}`,
+        border: `1px solid ${destaque ? "#E6C9A0" : "#EBD2C9"}`,
         borderRadius: 14,
         padding: 18,
-        background: destaque ? "#FBF1EE" : "white",
+        background: destaque ? "#FBF0DD" : "#FFFAF8",
       }}
     >
-      <div style={{ fontSize: 12, color: "#837A73" }}>{label}</div>
-      <div style={{ fontSize: 22, fontWeight: 800, marginTop: 6, color: destaque ? "#b04a6c" : "#2A2420" }}>{value}</div>
+      <div style={{ fontSize: 12, color: "#8A766B" }}>{label}</div>
+      <div style={{ fontSize: 22, fontWeight: 800, marginTop: 6, color: destaque ? "#A8782A" : "#4B3A31" }}>{value}</div>
     </div>
   );
 }

@@ -162,20 +162,20 @@ export default function SalaoDetalhePage() {
 
   return (
     <div>
-      <Link href="/saloes" style={{ fontSize: 13, color: "#837A73" }}>
+      <Link href="/saloes" style={{ fontSize: 13, color: "#8A766B" }}>
         ← Salões
       </Link>
       <h1 style={{ fontSize: 24, fontWeight: 800, marginTop: 8 }}>{salao.nome}</h1>
-      <p style={{ color: "#837A73", fontSize: 13 }}>
+      <p style={{ color: "#8A766B", fontSize: 13 }}>
         {salao.endereco ?? "Sem endereço cadastrado"} {salao.telefone ? `· ${salao.telefone}` : ""}
       </p>
-      <p style={{ color: "#837A73", fontSize: 12, marginTop: 2 }}>
+      <p style={{ color: "#8A766B", fontSize: 12, marginTop: 2 }}>
         Assinante desde {new Date(salao.criadoEm).toLocaleDateString("pt-BR")} · {salao.notaMedia.toFixed(1)}★ (
         {salao.totalAvaliacoes} avaliações)
       </p>
 
       {erro && (
-        <div style={{ marginTop: 16, color: "#b04a6c", fontSize: 13, background: "#F7E9E6", padding: 10, borderRadius: 8 }}>
+        <div style={{ marginTop: 16, color: "#C4493F", fontSize: 13, background: "#FADDD9", padding: 10, borderRadius: 8 }}>
           {erro}
         </div>
       )}
@@ -186,24 +186,24 @@ export default function SalaoDetalhePage() {
           {salao.assinatura ? (
             <>
               <div style={{ fontSize: 22, fontWeight: 800, marginTop: 10 }}>{salao.assinatura.plano.nome}</div>
-              <div style={{ fontSize: 13, color: "#837A73" }}>
+              <div style={{ fontSize: 13, color: "#8A766B" }}>
                 {centavosParaReais(salao.assinatura.plano.precoCentavos)}/mês
               </div>
               <div style={{ marginTop: 10, fontSize: 13 }}>
                 Status: <strong>{STATUS_LABEL[salao.assinatura.status] ?? salao.assinatura.status}</strong>
               </div>
               {salao.assinatura.proximaCobrancaEm && (
-                <div style={{ fontSize: 12, color: "#837A73", marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: "#8A766B", marginTop: 2 }}>
                   Próxima cobrança: {new Date(salao.assinatura.proximaCobrancaEm).toLocaleDateString("pt-BR")}
                 </div>
               )}
               {salao.assinatura.status === "TRIAL" && salao.assinatura.trialTerminaEm && (
-                <div style={{ fontSize: 12, color: "#837A73", marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: "#8A766B", marginTop: 2 }}>
                   Teste grátis termina em: {new Date(salao.assinatura.trialTerminaEm).toLocaleDateString("pt-BR")}
                 </div>
               )}
               {salao.assinatura.bloqueadaEm && (
-                <div style={{ fontSize: 12, color: "#b04a6c", marginTop: 6, fontWeight: 600 }}>
+                <div style={{ fontSize: 12, color: "#A8782A", marginTop: 6, fontWeight: 600 }}>
                   Equipe bloqueada desde {new Date(salao.assinatura.bloqueadaEm).toLocaleString("pt-BR")} — cliente
                   final some da busca após o período de carência configurado.
                 </div>
@@ -221,8 +221,8 @@ export default function SalaoDetalhePage() {
                 </button>
               </div>
 
-              <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid #DEDAD4" }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: "#837A73", marginBottom: 8 }}>
+              <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid #EBD2C9" }}>
+                <div style={{ fontSize: 12, fontWeight: 700, color: "#8A766B", marginBottom: 8 }}>
                   Trocar plano manualmente (sem cobrança — use com cuidado)
                 </div>
                 <div style={{ display: "flex", gap: 8 }}>
@@ -240,18 +240,18 @@ export default function SalaoDetalhePage() {
               </div>
             </>
           ) : (
-            <p style={{ color: "#837A73", fontSize: 13 }}>Sem assinatura.</p>
+            <p style={{ color: "#8A766B", fontSize: 13 }}>Sem assinatura.</p>
           )}
         </div>
 
         <div style={cardStyle}>
           <div style={{ fontSize: 14, fontWeight: 800 }}>Equipe ({salao.funcionarios.length})</div>
           <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 8 }}>
-            {salao.funcionarios.length === 0 && <p style={{ color: "#837A73", fontSize: 13 }}>Nenhum funcionário cadastrado.</p>}
+            {salao.funcionarios.length === 0 && <p style={{ color: "#8A766B", fontSize: 13 }}>Nenhum funcionário cadastrado.</p>}
             {salao.funcionarios.map((f) => (
               <div key={f.id} style={{ fontSize: 13, opacity: f.ativo ? 1 : 0.5 }}>
                 <strong>{f.usuario.nome}</strong> · {f.cargo}
-                <div style={{ fontSize: 12, color: "#837A73" }}>{f.usuario.email}</div>
+                <div style={{ fontSize: 12, color: "#8A766B" }}>{f.usuario.email}</div>
               </div>
             ))}
           </div>
@@ -260,14 +260,14 @@ export default function SalaoDetalhePage() {
 
       <div style={{ ...cardStyle, marginTop: 16 }}>
         <div style={{ fontSize: 14, fontWeight: 800 }}>Visibilidade (modo teste)</div>
-        <p style={{ color: "#837A73", fontSize: 13, marginTop: 6 }}>
+        <p style={{ color: "#8A766B", fontSize: 13, marginTop: 6 }}>
           Com o modo teste ativado, esse salão some da busca/"salões próximos" pra todos os clientes do app,
           exceto os autorizados abaixo. Útil pra testar o fluxo completo (agendamento, pagamento) sem aparecer pros
           clientes reais da plataforma. Não afeta o acesso direto por link.
         </p>
 
         {erroVisibilidade && (
-          <div style={{ marginTop: 10, color: "#b04a6c", fontSize: 13, background: "#F7E9E6", padding: 10, borderRadius: 8 }}>
+          <div style={{ marginTop: 10, color: "#C4493F", fontSize: 13, background: "#FADDD9", padding: 10, borderRadius: 8 }}>
             {erroVisibilidade}
           </div>
         )}
@@ -282,20 +282,20 @@ export default function SalaoDetalhePage() {
         </div>
 
         {salao.visibilidadeRestrita && (
-          <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid #DEDAD4" }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "#837A73", marginBottom: 8 }}>
+          <div style={{ marginTop: 18, paddingTop: 14, borderTop: "1px solid #EBD2C9" }}>
+            <div style={{ fontSize: 12, fontWeight: 700, color: "#8A766B", marginBottom: 8 }}>
               Clientes autorizados a ver esse salão
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 12 }}>
               {clientesAutorizados.length === 0 && (
-                <p style={{ color: "#837A73", fontSize: 13 }}>Nenhum cliente autorizado ainda — ninguém vê esse salão na busca.</p>
+                <p style={{ color: "#8A766B", fontSize: 13 }}>Nenhum cliente autorizado ainda — ninguém vê esse salão na busca.</p>
               )}
               {clientesAutorizados.map((c) => (
                 <div key={c.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: 13 }}>
                   <div>
                     <strong>{c.nome}</strong>
-                    <div style={{ fontSize: 12, color: "#837A73" }}>{c.email}</div>
+                    <div style={{ fontSize: 12, color: "#8A766B" }}>{c.email}</div>
                   </div>
                   <button disabled={autorizando} onClick={() => removerClienteAutorizado(c.id)} style={btnDanger}>
                     Remover
@@ -323,7 +323,7 @@ export default function SalaoDetalhePage() {
       <div style={{ ...cardStyle, marginTop: 16 }}>
         <div style={{ fontSize: 14, fontWeight: 800, marginBottom: 8 }}>Faturas</div>
         {!salao.assinatura || salao.assinatura.faturas.length === 0 ? (
-          <p style={{ color: "#837A73", fontSize: 13 }}>Nenhuma fatura ainda.</p>
+          <p style={{ color: "#8A766B", fontSize: 13 }}>Nenhuma fatura ainda.</p>
         ) : (
           <table>
             <thead>
@@ -352,10 +352,10 @@ export default function SalaoDetalhePage() {
 }
 
 const cardStyle: React.CSSProperties = {
-  border: "1px solid #DEDAD4",
+  border: "1px solid #EBD2C9",
   borderRadius: 14,
   padding: 20,
-  background: "white",
+  background: "#FFFAF8",
 };
 
 const btnBase: React.CSSProperties = {
@@ -367,11 +367,11 @@ const btnBase: React.CSSProperties = {
   cursor: "pointer",
 };
 
-const btnPrimary: React.CSSProperties = { ...btnBase, background: "#b04a6c", color: "white" };
-const btnSecondary: React.CSSProperties = { ...btnBase, background: "#F1EEE9", color: "#2A2420" };
-const btnDanger: React.CSSProperties = { ...btnBase, background: "#F7E9E6", color: "#b04a6c" };
+const btnPrimary: React.CSSProperties = { ...btnBase, background: "#A8782A", color: "white" };
+const btnSecondary: React.CSSProperties = { ...btnBase, background: "#F6E3DE", color: "#4B3A31" };
+const btnDanger: React.CSSProperties = { ...btnBase, background: "#FADDD9", color: "#C4493F" };
 const selectStyle: React.CSSProperties = {
-  border: "1px solid #DEDAD4",
+  border: "1px solid #EBD2C9",
   borderRadius: 9,
   padding: "9px 10px",
   fontSize: 13,

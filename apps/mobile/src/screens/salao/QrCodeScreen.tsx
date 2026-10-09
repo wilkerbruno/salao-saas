@@ -21,7 +21,7 @@ const QRCODE_ASSET = require("../../../assets/qrcode-agendamento.png");
 // "center" esse combo mediu errado (imagem saindo gigante, cortada nas
 // bordas, sem ninguém conseguir rolar até o botão). Calculando os números
 // certos aqui, o tamanho fica garantido não importa a tela.
-const RAZAO_ALTURA_LARGURA = 1600 / 1200;
+const RAZAO_ALTURA_LARGURA = 1601 / 894;
 
 // Cartaz com QR Code pra imprimir e deixar no salão (balcão, vitrine,
 // etc) — "Mais" > "QR Code para imprimir" (ver MaisScreen/MaisStack).

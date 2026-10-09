@@ -23,7 +23,10 @@ export function Sidebar() {
 
   return (
     <aside style={styles.sidebar}>
-      <div style={styles.brand}>Eleva One</div>
+      <div style={styles.brand}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src="/logo.png" alt="Eleva One" style={{ width: "100%", maxWidth: 170, height: "auto", display: "block" }} />
+      </div>
       <nav style={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {ITEMS.map((item) => (
           <Link
@@ -46,15 +49,16 @@ export function Sidebar() {
 const styles: Record<string, React.CSSProperties> = {
   sidebar: {
     width: 240,
-    background: "#171310",
-    color: "#EDEAE6",
+    background: "#FFF6F3",
+    borderRight: "1px solid #EBD2C9",
+    color: "#4B3A31",
     display: "flex",
     flexDirection: "column",
     padding: "24px 16px",
     gap: 24,
   },
   brand: { fontWeight: 800, fontSize: 16, padding: "0 8px" },
-  link: { padding: "11px 12px", borderRadius: 10, color: "#A79E96", textDecoration: "none", fontSize: 13, fontWeight: 600 },
-  linkActive: { background: "#2E2721", color: "#EDEAE6" },
-  logout: { background: "none", border: "none", color: "#A79E96", textAlign: "left", padding: "11px 12px", cursor: "pointer", fontSize: 13 },
+  link: { padding: "11px 12px", borderRadius: 10, color: "#8A766B", textDecoration: "none", fontSize: 13, fontWeight: 600 },
+  linkActive: { background: "#F5E4C9", color: "#4B3A31" },
+  logout: { background: "none", border: "none", color: "#8A766B", textAlign: "left", padding: "11px 12px", cursor: "pointer", fontSize: 13 },
 };

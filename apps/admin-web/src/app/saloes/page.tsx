@@ -23,9 +23,9 @@ export default function SaloesPage() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800 }}>Salões</h1>
-      <p style={{ color: "#837A73", fontSize: 13 }}>Todas as contas assinantes da plataforma</p>
+      <p style={{ color: "#8A766B", fontSize: 13 }}>Todas as contas assinantes da plataforma</p>
 
-      <div style={{ border: "1px solid #DEDAD4", borderRadius: 14, background: "white", marginTop: 20, overflow: "hidden" }}>
+      <div style={{ border: "1px solid #EBD2C9", borderRadius: 14, background: "#FFFAF8", marginTop: 20, overflow: "hidden" }}>
         <table>
           <thead>
             <tr>
@@ -50,9 +50,9 @@ export default function SaloesPage() {
                 <td>{b.assinatura?.status ?? "—"}</td>
                 <td>
                   {b.visibilidadeRestrita ? (
-                    <span style={{ color: "#b04a6c", fontWeight: 700, fontSize: 12 }}>🔒 Teste</span>
+                    <span style={{ color: "#A8782A", fontWeight: 700, fontSize: 12 }}>🔒 Teste</span>
                   ) : (
-                    <span style={{ color: "#837A73", fontSize: 12 }}>Normal</span>
+                    <span style={{ color: "#8A766B", fontSize: 12 }}>Normal</span>
                   )}
                 </td>
                 <td>{new Date(b.criadoEm).toLocaleDateString("pt-BR")}</td>

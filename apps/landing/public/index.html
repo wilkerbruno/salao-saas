@@ -16,23 +16,23 @@
     scroll of feature cards, a 3-step flow and a final two-path download —
     like a salon appointment card: headline up top, line items underneath.
     Committed single dark world (the product itself has no light mode), so
-    tokens are defined once on :root with color-scheme: dark.
+    tokens are defined once on :root with color-scheme: light.
   */
   :root{
-    --bg:#161014;
-    --surface:#211820;
-    --surface-alt:#2C2029;
-    --ink:#F7EEF1;
-    --ink-muted:#A99BA3;
-    --border:#43323D;
-    --accent:#E8A0B4;
-    --accent-ink:#2A0F1B;
-    --accent-soft:#40222F;
-    --success:#7BB394;
+    --bg:#FBEFEC;
+    --surface:#FFFAF8;
+    --surface-alt:#F6E3DE;
+    --ink:#4B3A31;
+    --ink-muted:#8A766B;
+    --border:#EBD2C9;
+    --accent:#A8782A;
+    --accent-ink:#FFFFFF;
+    --accent-soft:#F5E4C9;
+    --success:#3F8F62;
     --font-display:'Fraunces', Georgia, 'Times New Roman', serif;
     --font-body:'Work Sans', system-ui, -apple-system, sans-serif;
     --font-mono:'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   *{box-sizing:border-box;}
@@ -62,7 +62,7 @@
     position:sticky;
     top:env(safe-area-inset-top,0px);
     z-index:20;
-    background:rgba(22,16,20,.86);
+    background:rgba(251,239,236,.88);
     backdrop-filter:blur(10px);
     border-bottom:1px solid var(--border);
   }
@@ -71,6 +71,7 @@
     padding-block:14px;
   }
   .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-weight:700;font-size:19px;letter-spacing:-.01em;}
+  .brand-logo{height:64px;width:auto;display:block;}
   .brand-mark{
     width:38px;height:38px;border-radius:50%;
     object-fit:cover;border:1px solid var(--border);
@@ -86,7 +87,7 @@
     text-decoration:none;cursor:pointer;white-space:nowrap;
   }
   .btn-primary{background:var(--accent);color:var(--accent-ink);}
-  .btn-primary:hover{background:#F0B5C6;}
+  .btn-primary:hover{background:#8F6420;}
   .btn-ghost{background:transparent;color:var(--ink);border-color:var(--border);}
   .btn-ghost:hover{border-color:var(--ink-muted);}
   .nav-cta{display:none;}
@@ -128,11 +129,11 @@
   .phone-stage{display:flex;justify-content:center;}
   .phone{
     width:min(290px,78vw);
-    background:#0E0C0B;
+    background:#4B3A31;
     border:1px solid var(--border);
     border-radius:34px;
     padding:14px 12px 20px;
-    box-shadow:0 30px 70px -30px rgba(0,0,0,.7);
+    box-shadow:0 30px 70px -30px rgba(120,80,60,.35);
   }
   .phone-screen{
     background:var(--bg);border-radius:22px;overflow:hidden;border:1px solid var(--border);
@@ -223,7 +224,7 @@
 <body>
 <header class="site">
   <div class="wrap nav">
-    <div class="brand"><img class="brand-mark" src="assets/elevaone-mark-128.png" alt="Eleva One" width="38" height="38">Eleva One</div>
+    <div class="brand"><img class="brand-logo" src="assets/elevaone-logo.png" alt="Eleva One" height="52"></div>
     <nav class="links-desktop">
       <a href="#recursos">Recursos</a>
       <a href="#como-funciona">Como funciona</a>
@@ -400,7 +401,7 @@
 
 <footer>
   <div class="wrap footer-row">
-    <div class="brand"><img class="brand-mark" src="assets/elevaone-mark-128.png" alt="Eleva One" width="26" height="26" style="width:26px;height:26px;">Eleva One</div>
+    <div class="brand"><img class="brand-logo" src="assets/elevaone-logo.png" alt="Eleva One" height="40" style="height:40px;"></div>
     <a class="dev-credit" href="https://divisionstech.com" target="_blank" rel="noopener">
       <span>desenvolvido por</span>
       <img src="assets/divisionstech-260.png" alt="Divisions Tech" height="16">

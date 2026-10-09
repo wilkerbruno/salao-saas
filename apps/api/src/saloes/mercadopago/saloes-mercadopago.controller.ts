@@ -63,9 +63,9 @@ export class SaloesMercadoPagoController {
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Mercado Pago</title>
 <style>
-  body { font-family: -apple-system, Roboto, sans-serif; background:#161014; color:#F7EEF1; text-align:center; padding-top:72px; }
-  h2 { color: ${resultado.sucesso ? "#4ade80" : "#f87171"}; }
-  a { color:#C97A94; }
+  body { font-family: -apple-system, Roboto, sans-serif; background:#FBEFEC; color:#4B3A31; text-align:center; padding-top:72px; }
+  h2 { color: ${resultado.sucesso ? "#3F8F62" : "#C4493F"}; }
+  a { color:#A8782A; }
 </style>
 </head>
 <body>

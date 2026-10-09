@@ -1,21 +1,21 @@
-// Tokens visuais do app — tema escuro "rosé": vinho escuro com rosé de
+// Tokens visuais do app — tema claro "rosa e dourado": fundo rosa claro com dourado de
 // destaque, pensado para salão feminino (cabelo + unhas). Toda tela usa só
 // os nomes abaixo (colors.*, nunca hex direto), então trocar a paleta aqui
 // muda o app inteiro.
 export const colors = {
-  background: "#161014",
-  surface: "#211820",
-  surfaceAlt: "#2C2029",
-  ink: "#F7EEF1",
-  inkMuted: "#A99BA3",
-  border: "#43323D",
-  accent: "#E8A0B4", // rosé — cor de destaque (botões, ícone ativo, estrelas)
-  accentSoft: "#40222F",
-  accentInk: "#2A0F1B", // texto escuro sobre o rosé (contraste)
-  success: "#7BB394",
-  successSoft: "#1E2B24",
-  danger: "#E5736A",
-  dangerSoft: "#38201F",
+  background: "#FBEFEC",
+  surface: "#FFFAF8",
+  surfaceAlt: "#F6E3DE",
+  ink: "#4B3A31",
+  inkMuted: "#8A766B",
+  border: "#EBD2C9",
+  accent: "#A8782A", // dourado - cor de destaque (botoes, icone ativo, estrelas)
+  accentSoft: "#F5E4C9",
+  accentInk: "#FFFFFF", // texto sobre o dourado
+  success: "#3F8F62",
+  successSoft: "#E1F1E7",
+  danger: "#C4493F",
+  dangerSoft: "#FADDD9",
 };
 
 export const spacing = {

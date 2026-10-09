@@ -101,7 +101,7 @@ function CamposPlano({ form, onChange }: { form: PlanoForm; onChange: (form: Pla
         style={{ ...inputStyle, resize: "vertical", fontFamily: "inherit" }}
       />
       <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-        <span style={{ fontSize: 12.5, color: "#837A73", flex: 1 }}>Desconto no plano anual (opcional)</span>
+        <span style={{ fontSize: 12.5, color: "#8A766B", flex: 1 }}>Desconto no plano anual (opcional)</span>
         <select
           value={form.descontoAnualTipo}
           onChange={(e) => onChange({ ...form, descontoAnualTipo: e.target.value as TipoDesconto })}
@@ -117,7 +117,7 @@ function CamposPlano({ form, onChange }: { form: PlanoForm; onChange: (form: Pla
           style={{ ...inputStyle, flex: 1 }}
         />
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingTop: 4, borderTop: "1px solid #F1EEE9" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingTop: 4, borderTop: "1px solid #F6E3DE" }}>
         <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
           <input
             type="checkbox"
@@ -136,9 +136,9 @@ function CamposPlano({ form, onChange }: { form: PlanoForm; onChange: (form: Pla
         )}
       </div>
       {form.precoReais && !Number.isNaN(parseFloat(form.precoReais.replace(",", "."))) && (
-        <div style={{ fontSize: 12, color: "#837A73" }}>
+        <div style={{ fontSize: 12, color: "#8A766B" }}>
           Preço anual resultante:{" "}
-          <strong style={{ color: "#3A3530" }}>
+          <strong style={{ color: "#4B3A31" }}>
             {centavosParaReais(
               calcularPrecoAnualCentavos(
                 Math.round(parseFloat(form.precoReais.replace(",", ".")) * 100),
@@ -257,7 +257,7 @@ export default function PlanosPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 800 }}>Planos e preços</h1>
-          <p style={{ color: "#837A73", fontSize: 13 }}>Defina os valores cobrados de cada salão assinante</p>
+          <p style={{ color: "#8A766B", fontSize: 13 }}>Defina os valores cobrados de cada salão assinante</p>
         </div>
         <button onClick={() => setFormAberto((v) => !v)} style={btnPrimary}>
           {formAberto ? "Cancelar" : "+ Novo plano"}
@@ -266,7 +266,7 @@ export default function PlanosPage() {
 
       {formAberto && (
         <form onSubmit={criarPlano} style={{ ...cardStyle, marginTop: 20, display: "flex", flexDirection: "column", gap: 10 }}>
-          {erro && <div style={{ color: "#b04a6c", fontSize: 13 }}>{erro}</div>}
+          {erro && <div style={{ color: "#A8782A", fontSize: 13 }}>{erro}</div>}
           <CamposPlano form={novoPlano} onChange={setNovoPlano} />
           <button type="submit" disabled={salvando} style={{ ...btnPrimary, width: 160 }}>
             {salvando ? "Criando…" : "Criar plano"}
@@ -284,7 +284,7 @@ export default function PlanosPage() {
 
             {editandoId === plano.id ? (
               <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 10 }}>
-                {erroEdicao && <div style={{ color: "#b04a6c", fontSize: 12 }}>{erroEdicao}</div>}
+                {erroEdicao && <div style={{ color: "#A8782A", fontSize: 12 }}>{erroEdicao}</div>}
                 <CamposPlano form={edicao} onChange={setEdicao} />
                 <div style={{ display: "flex", gap: 8 }}>
                   <button onClick={() => salvarEdicao(plano.id)} disabled={salvandoEdicao} style={{ ...btnPrimary, flex: 1 }}>
@@ -299,17 +299,17 @@ export default function PlanosPage() {
               <>
                 <div style={{ fontSize: 28, fontWeight: 800, marginTop: 6 }}>
                   {centavosParaReais(plano.precoCentavos)}
-                  <span style={{ fontSize: 13, color: "#837A73", fontWeight: 600 }}>/mês</span>
+                  <span style={{ fontSize: 13, color: "#8A766B", fontWeight: 600 }}>/mês</span>
                 </div>
-                <div style={{ fontSize: 12, color: "#837A73", marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: "#8A766B", marginTop: 2 }}>
                   {plano.limiteFuncionarios == null ? "Funcionários ilimitados" : `Até ${plano.limiteFuncionarios} funcionário(s)`}
                 </div>
 
-                <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #F1EEE9" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#837A73", textTransform: "uppercase" }}>Plano anual</div>
+                <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #F6E3DE" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#8A766B", textTransform: "uppercase" }}>Plano anual</div>
                   <div style={{ fontSize: 15, fontWeight: 800, marginTop: 4 }}>
                     {centavosParaReais(calcularPrecoAnualCentavos(plano.precoCentavos, plano.descontoAnualTipo, plano.descontoAnualValor))}
-                    <span style={{ fontSize: 12, color: "#837A73", fontWeight: 600 }}>
+                    <span style={{ fontSize: 12, color: "#8A766B", fontWeight: 600 }}>
                       {" "}
                       (
                       {plano.descontoAnualTipo === TipoDesconto.PERCENTUAL
@@ -320,8 +320,8 @@ export default function PlanosPage() {
                   </div>
                 </div>
 
-                <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #F1EEE9" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#837A73", textTransform: "uppercase" }}>
+                <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #F6E3DE" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#8A766B", textTransform: "uppercase" }}>
                     Suporte prioritário
                   </div>
                   <div style={{ fontSize: 13, fontWeight: 700, marginTop: 4 }}>
@@ -329,7 +329,7 @@ export default function PlanosPage() {
                   </div>
                 </div>
 
-                <ul style={{ marginTop: 14, paddingLeft: 18, fontSize: 12.5, color: "#837A73" }}>
+                <ul style={{ marginTop: 14, paddingLeft: 18, fontSize: 12.5, color: "#8A766B" }}>
                   {plano.recursos.map((r) => (
                     <li key={r}>{r}</li>
                   ))}
@@ -346,13 +346,13 @@ export default function PlanosPage() {
                   <button
                     onClick={() => excluir(plano)}
                     disabled={excluindoId === plano.id}
-                    style={{ ...btnLink, color: "#b04a6c" }}
+                    style={{ ...btnLink, color: "#A8782A" }}
                   >
                     {excluindoId === plano.id ? "Excluindo…" : "Excluir"}
                   </button>
                 </div>
                 {erroExclusao?.id === plano.id && (
-                  <div style={{ color: "#b04a6c", fontSize: 12, marginTop: 6 }}>{erroExclusao.mensagem}</div>
+                  <div style={{ color: "#A8782A", fontSize: 12, marginTop: 6 }}>{erroExclusao.mensagem}</div>
                 )}
               </>
             )}
@@ -363,10 +363,10 @@ export default function PlanosPage() {
   );
 }
 
-const cardStyle: React.CSSProperties = { border: "1px solid #DEDAD4", borderRadius: 16, padding: 22, background: "white" };
+const cardStyle: React.CSSProperties = { border: "1px solid #EBD2C9", borderRadius: 16, padding: 22, background: "#FFFAF8" };
 const btnBase: React.CSSProperties = { border: "none", borderRadius: 9, padding: "9px 14px", fontWeight: 700, fontSize: 13, cursor: "pointer" };
-const btnPrimary: React.CSSProperties = { ...btnBase, background: "#b04a6c", color: "white" };
-const btnSecondary: React.CSSProperties = { ...btnBase, border: "1px solid #DEDAD4", background: "white" };
-const btnLink: React.CSSProperties = { ...btnBase, background: "none", color: "#837A73", padding: "4px 0", textAlign: "left" };
-const inputStyle: React.CSSProperties = { border: "1px solid #DEDAD4", borderRadius: 9, padding: "10px 12px", fontSize: 13 };
-const badgeStyle: React.CSSProperties = { fontSize: 11, fontWeight: 700, color: "#837A73", background: "#F1EEE9", padding: "3px 8px", borderRadius: 999 };
+const btnPrimary: React.CSSProperties = { ...btnBase, background: "#A8782A", color: "white" };
+const btnSecondary: React.CSSProperties = { ...btnBase, border: "1px solid #EBD2C9", background: "#FFFAF8" };
+const btnLink: React.CSSProperties = { ...btnBase, background: "none", color: "#8A766B", padding: "4px 0", textAlign: "left" };
+const inputStyle: React.CSSProperties = { border: "1px solid #EBD2C9", borderRadius: 9, padding: "10px 12px", fontSize: 13 };
+const badgeStyle: React.CSSProperties = { fontSize: 11, fontWeight: 700, color: "#8A766B", background: "#F6E3DE", padding: "3px 8px", borderRadius: 999 };

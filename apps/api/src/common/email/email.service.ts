@@ -59,18 +59,18 @@ export class EmailService {
   async enviarCodigoRecuperacaoSenha(destinatario: string, nome: string, codigo: string): Promise<void> {
     const primeiroNome = nome.trim().split(" ")[0] || nome;
     const html = `
-      <div style="background:#161014;padding:32px 16px;font-family:-apple-system,Helvetica,Arial,sans-serif;">
-        <div style="max-width:420px;margin:0 auto;background:#1c1816;border-radius:12px;padding:32px 24px;">
-          <p style="color:#E8A0B4;font-size:20px;font-weight:700;margin:0 0 20px;">Eleva One</p>
-          <p style="color:#F7EEF1;font-size:15px;margin:0 0 8px;">Olá, ${primeiroNome}!</p>
-          <p style="color:#F7EEF1;font-size:15px;line-height:22px;margin:0 0 24px;">
+      <div style="background:#FBEFEC;padding:32px 16px;font-family:-apple-system,Helvetica,Arial,sans-serif;">
+        <div style="max-width:420px;margin:0 auto;background:#FFFAF8;border:1px solid #EBD2C9;border-radius:12px;padding:32px 24px;">
+          <p style="color:#A8782A;font-size:20px;font-weight:700;margin:0 0 20px;">Eleva One</p>
+          <p style="color:#4B3A31;font-size:15px;margin:0 0 8px;">Olá, ${primeiroNome}!</p>
+          <p style="color:#4B3A31;font-size:15px;line-height:22px;margin:0 0 24px;">
             Recebemos um pedido para redefinir a senha da sua conta. Use o código abaixo no app — ele
             expira em 15 minutos.
           </p>
-          <p style="color:#E8A0B4;font-size:32px;font-weight:800;letter-spacing:8px;text-align:center;margin:0 0 24px;">
+          <p style="color:#A8782A;font-size:32px;font-weight:800;letter-spacing:8px;text-align:center;margin:0 0 24px;">
             ${codigo}
           </p>
-          <p style="color:#A99BA3;font-size:12px;line-height:18px;margin:0;">
+          <p style="color:#8A766B;font-size:12px;line-height:18px;margin:0;">
             Se você não pediu essa alteração, pode ignorar este e-mail — sua senha continua a mesma.
           </p>
         </div>

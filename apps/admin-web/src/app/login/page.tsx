@@ -35,8 +35,9 @@ export default function LoginPage() {
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <form onSubmit={handleSubmit} style={{ width: 320, display: "flex", flexDirection: "column", gap: 14 }}>
         <div>
-          <div style={{ fontSize: 22, fontWeight: 800 }}>Eleva One</div>
-          <div style={{ fontSize: 13, color: "#837A73" }}>Painel administrativo da plataforma</div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo.png" alt="Eleva One" style={{ width: 200, height: "auto", display: "block", marginBottom: 6 }} />
+          <div style={{ fontSize: 13, color: "#8A766B" }}>Painel administrativo da plataforma</div>
         </div>
         <input
           value={email}
@@ -51,7 +52,7 @@ export default function LoginPage() {
           placeholder="Senha"
           style={inputStyle}
         />
-        {erro && <div style={{ color: "#b04a6c", fontSize: 13 }}>{erro}</div>}
+        {erro && <div style={{ color: "#A8782A", fontSize: 13 }}>{erro}</div>}
         <button type="submit" disabled={carregando} style={buttonStyle}>
           {carregando ? "Entrando…" : "Entrar"}
         </button>
@@ -61,7 +62,7 @@ export default function LoginPage() {
 }
 
 const inputStyle: React.CSSProperties = {
-  border: "1px solid #DEDAD4",
+  border: "1px solid #EBD2C9",
   borderRadius: 10,
   padding: "12px 14px",
   fontSize: 14,
@@ -71,7 +72,7 @@ const buttonStyle: React.CSSProperties = {
   border: "none",
   borderRadius: 10,
   padding: "12px 0",
-  background: "#b04a6c",
+  background: "#A8782A",
   color: "white",
   fontWeight: 700,
   fontSize: 14,

@@ -75,7 +75,7 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <StatusBar style="light" />
+      <StatusBar style="dark" />
       <RootNavigator />
       {progressoApk !== null && (
         <View style={styles.avisoAtualizacao} pointerEvents="none">
