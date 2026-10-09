@@ -8,7 +8,6 @@ import {
   AgendamentoLoteCriado,
   AssinaturaPacoteCliente,
   atendeCategoria,
-  AVISO_NAO_COMPARECIMENTO,
   CATEGORIAS_SERVICO,
   CategoriaServico,
   centavosParaReais,
@@ -284,12 +283,6 @@ export function BookingScreen({ route, navigation }: Props) {
       else delete proximo[categoria];
       return proximo;
     });
-    resetarDiaEHorario();
-  }
-
-  // Coloca `categoria` como a primeira área do atendimento.
-  function comecarPor(categoria: CategoriaServico) {
-    setOrdemCategorias((atual) => [categoria, ...atual.filter((c) => c !== categoria)]);
     resetarDiaEHorario();
   }
 
@@ -574,55 +567,6 @@ export function BookingScreen({ route, navigation }: Props) {
           </Card>
         )}
 
-        {categoriasDoAtendimento.length > 1 && (
-          <>
-            <Text style={styles.sectionTitle}>Como prefere?</Text>
-            <View style={styles.horariosGrid}>
-              {[
-                { valor: false, label: "Um depois do outro" },
-                { valor: true, label: "Ao mesmo tempo" },
-              ].map((opcao) => (
-                <Pressable
-                  key={opcao.label}
-                  onPress={() => {
-                    setSimultaneo(opcao.valor);
-                    resetarDiaEHorario();
-                  }}
-                >
-                  <View style={[styles.horarioChip, simultaneoAtivo === opcao.valor && styles.horarioChipSelecionado]}>
-                    <Text style={[styles.horarioTexto, simultaneoAtivo === opcao.valor && styles.horarioTextoSelecionado]}>
-                      {opcao.label}
-                    </Text>
-                  </View>
-                </Pressable>
-              ))}
-            </View>
-            <Text style={styles.hint}>
-              {simultaneoAtivo
-                ? "Cada área com uma profissional diferente, ao mesmo tempo — por exemplo, as unhas enquanto o cabelo é feito. Termina mais cedo."
-                : "Um atendimento depois do outro, no mesmo dia."}
-            </Text>
-          </>
-        )}
-
-        {categoriasDoAtendimento.length > 1 && !simultaneoAtivo && (
-          <>
-            <Text style={styles.sectionTitle}>Começar por</Text>
-            <View style={styles.horariosGrid}>
-              {categoriasDoAtendimento.map((categoria, indice) => (
-                <Pressable key={categoria} onPress={() => comecarPor(categoria)}>
-                  <View style={[styles.horarioChip, indice === 0 && styles.horarioChipSelecionado]}>
-                    <Text style={[styles.horarioTexto, indice === 0 && styles.horarioTextoSelecionado]}>
-                      {rotuloCategoria(categoria)}
-                    </Text>
-                  </View>
-                </Pressable>
-              ))}
-            </View>
-            <Text style={styles.hint}>Você escolhe por qual área começar.</Text>
-          </>
-        )}
-
         {categoriasDoAtendimento.map((categoria) => {
           const info = CATEGORIAS_SERVICO.find((c) => c.valor === categoria)!;
           const doTime = funcionarios.filter((f) => atendeCategoria(f.especialidades, categoria));
@@ -801,14 +745,6 @@ export function BookingScreen({ route, navigation }: Props) {
               </Text>
             )}
 
-            <Card style={styles.avisoCard}>
-              <Text style={styles.avisoTexto}>
-                {formaPagamento === "PACOTE"
-                  ? "Política de cancelamento: em caso de não comparecimento ao horário agendado sem cancelamento prévio, a vaga ainda é contada como usada na sua cota semanal do pacote."
-                  : AVISO_NAO_COMPARECIMENTO}
-              </Text>
-            </Card>
-
             <Button
               label={
                 formaPagamento === "PACOTE" || formaPagamento === MetodoPagamento.DINHEIRO
@@ -912,8 +848,6 @@ const styles = StyleSheet.create({
   horarioTexto: { fontSize: 13, fontWeight: "700", color: colors.ink },
   horarioTextoSelecionado: { color: colors.accentInk },
   metodoChip: { alignItems: "center" },
-  avisoCard: { backgroundColor: colors.dangerSoft },
-  avisoTexto: { fontSize: 11, color: colors.danger, lineHeight: 16 },
   confirmLinha: { flexDirection: "row", justifyContent: "space-between" },
   confirmServico: { fontSize: 13, color: colors.ink, fontWeight: "600" },
   divisor: { height: 1, backgroundColor: colors.border },
