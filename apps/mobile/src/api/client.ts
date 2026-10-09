@@ -5,7 +5,16 @@ import { useAuthStore } from "../store/authStore";
 // Em desenvolvimento com o Expo Go num celular físico, troque "localhost" pelo
 // IP da sua máquina na rede local (ex: http://192.168.0.10:3000/api).
 // No emulador Android, "localhost" não chega no host — use 10.0.2.2.
-export const API_URL = process.env.EXPO_PUBLIC_API_URL ?? "http://localhost:3000/api";
+
+// Normaliza a URL da API: vazio -> producao; sem "/api" no final -> acrescenta
+// (o prefixo global da API e /api; sem ele toda chamada da 404).
+function normalizarApiUrl(valor: string | undefined, padrao: string): string {
+  const v = (valor ?? "").trim().replace(/\/+$/, "");
+  if (!v) return padrao;
+  return v.endsWith("/api") ? v : `${v}/api`;
+}
+
+export const API_URL = normalizarApiUrl(process.env.EXPO_PUBLIC_API_URL, "https://api.elevaone.store/api");
 
 // `withCredentials` faz o navegador mandar/aceitar o cookie httpOnly de
 // sessão (ver authStore.ts e API: auth/jwt.strategy.ts) — só existe no Web;
