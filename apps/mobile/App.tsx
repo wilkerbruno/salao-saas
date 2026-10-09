@@ -7,6 +7,7 @@ import { RootNavigator } from "./src/navigation/RootNavigator";
 import { MercadoPagoConectadoWebScreen } from "./src/screens/salao/MercadoPagoConectadoWebScreen";
 import { verificarEAtualizarApk } from "./src/utils/atualizacaoApk";
 import { colors, radius, spacing } from "./src/theme/tokens";
+import { useAuthStore } from "./src/store/authStore";
 
 // Na versão Web, o popup de OAuth do Mercado Pago volta pra essa mesma
 // origem em "/mercadopago-conectado" (ver SaloesMercadoPagoService e
@@ -54,13 +55,15 @@ function useAtualizacaoAutomatica() {
 // algo baixando em segundo plano.
 function useAtualizacaoApk() {
   const [progresso, setProgresso] = useState<number | null>(null);
+  // Checa assim que o usuario esta logado (e de novo em cada novo login).
+  const logado = useAuthStore((s) => !!s.usuario);
 
   useEffect(() => {
-    if (__DEV__) return;
+    if (__DEV__ || !logado) return;
     verificarEAtualizarApk((fracao) => setProgresso(fracao)).finally(() => {
       setProgresso(null);
     });
-  }, []);
+  }, [logado]);
 
   return progresso;
 }
