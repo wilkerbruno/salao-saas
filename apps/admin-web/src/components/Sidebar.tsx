@@ -23,7 +23,7 @@ export function Sidebar() {
 
   return (
     <aside style={styles.sidebar}>
-      <div style={styles.brand}>BellaOS</div>
+      <div style={styles.brand}>Eleva One</div>
       <nav style={{ display: "flex", flexDirection: "column", gap: 2 }}>
         {ITEMS.map((item) => (
           <Link

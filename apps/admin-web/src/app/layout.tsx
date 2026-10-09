@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR">
       <head>
-        <title>BellaOS — Painel SaaS</title>
+        <title>Eleva One — Painel SaaS</title>
       </head>
       <body>
         {isPublica ? (

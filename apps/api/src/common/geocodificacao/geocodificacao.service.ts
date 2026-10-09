@@ -105,7 +105,7 @@ export class GeocodificacaoService {
         // Exigido pela política de uso do Nominatim — identifica a aplicação
         // que está chamando (não precisa ser um e-mail de verdade monitorado,
         // só algo que identifique o app em caso de abuso).
-        headers: { "User-Agent": "BellaOneApp/1.0 (+https://bellaone.store; contato: divisionstech@gmail.com)" },
+        headers: { "User-Agent": "ElevaOneApp/1.0 (+https://elevaone.store; contato: divisionstech@gmail.com)" },
       });
       if (!resposta.ok) {
         this.logger.warn(`Nominatim respondeu ${resposta.status} para "${consulta}"`);

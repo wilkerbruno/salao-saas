@@ -219,7 +219,7 @@ export class AssinaturasService {
     const backUrl = this.config.get<string>("MERCADOPAGO_BACK_URL") ?? "https://www.mercadopago.com.br";
 
     const preapproval = await this.mercadoPago.criarPreapproval({
-      reason: `Assinatura BellaOS — Plano ${plano.nome}`,
+      reason: `Assinatura Eleva One — Plano ${plano.nome}`,
       // "assinaturaId::planoId": é assim que o webhook (que só recebe o id da
       // preapproval no Mercado Pago) sabe qual Assinatura/Plano atualizar.
       externalReference: `${assinatura.id}::${plano.id}`,

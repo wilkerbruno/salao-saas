@@ -15,9 +15,9 @@ import { COOKIE_TOKEN } from "./jwt.strategy";
 // token num cookie httpOnly. É só a versão web do app (Expo Web, ver
 // secureStorage.web.ts) que depende desse cookie: lá o token nunca fica em
 // localStorage, então nem um script malicioso (XSS) consegue ler. `secure`
-// fica ligado sempre — o site roda em HTTPS (ver bellaone.store) — e
-// `sameSite: lax` já cobre o caso de app.bellaone.store chamando
-// api.bellaone.store (mesmo domínio-base, subdomínios diferentes).
+// fica ligado sempre — o site roda em HTTPS (ver elevaone.store) — e
+// `sameSite: lax` já cobre o caso de app.elevaone.store chamando
+// api.elevaone.store (mesmo domínio-base, subdomínios diferentes).
 const UM_DIA_MS = 24 * 60 * 60 * 1000;
 
 function setarCookieToken(res: Response, token: string) {

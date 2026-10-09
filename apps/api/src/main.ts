@@ -11,9 +11,9 @@ import { AppModule } from "./app.module";
 // cookie). Dá pra adicionar mais origens em produção via CORS_ORIGINS
 // (separadas por vírgula) sem precisar mexer no código.
 const ORIGENS_PADRAO = [
-  "https://app.bellaone.store",
-  "https://painel.bellaone.store",
-  "https://www.painel.bellaone.store",
+  "https://app.elevaone.store",
+  "https://painel.elevaone.store",
+  "https://www.painel.elevaone.store",
 ];
 
 function origemPermitida(origin: string | undefined, extras: string[]): boolean {
@@ -24,7 +24,7 @@ function origemPermitida(origin: string | undefined, extras: string[]): boolean 
   // banco-de-dados-salao.lcgx8u.easypanel.host) — o "lcgx8u" é o
   // identificador da sua conta/cluster, não de qualquer app no EasyPanel.
   // Cobre o painel/API/app por qualquer domínio padrão deles, inclusive
-  // enquanto o DNS de painel.bellaone.store não estiver resolvendo.
+  // enquanto o DNS de painel.elevaone.store não estiver resolvendo.
   if (/^https:\/\/[a-z0-9-]+\.lcgx8u\.easypanel\.host$/.test(origin)) return true;
   return [...ORIGENS_PADRAO, ...extras].includes(origin);
 }

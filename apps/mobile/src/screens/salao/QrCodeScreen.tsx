@@ -9,7 +9,7 @@ import { alertar } from "../../utils/alertaCompat";
 import { colors, spacing } from "../../theme/tokens";
 
 // Imagem estática (não desenhada na hora): o conteúdo é sempre o mesmo —
-// aponta pra bellaone.store — já que a plataforma ainda não tem uma página
+// aponta pra elevaone.store — já que a plataforma ainda não tem uma página
 // de agendamento própria por salão (o cliente baixa o app e procura a
 // salão de lá). Se um dia existir um link direto por salão, esse QR
 // Code passa a ser gerado dinamicamente com o id do salão em vez de usar

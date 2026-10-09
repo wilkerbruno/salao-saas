@@ -79,7 +79,7 @@ export class AssinaturasPagamentoService {
       },
     });
 
-    const descricao = `Assinatura BellaOS — Plano ${plano.nome} (${dto.periodicidade === PeriodicidadeAssinatura.ANUAL ? "anual" : "mensal"})`;
+    const descricao = `Assinatura Eleva One — Plano ${plano.nome} (${dto.periodicidade === PeriodicidadeAssinatura.ANUAL ? "anual" : "mensal"})`;
     const externalReference = `${PREFIXO_EXTERNAL_REFERENCE}${pagamento.id}`;
 
     let motivoRecusaCartao: string | null = null;

@@ -35,7 +35,7 @@ export class EmailService {
   }
 
   private get remetente(): string {
-    return this.config.get<string>("SMTP_FROM") || '"Bella One" <no-reply@bellaone.store>';
+    return this.config.get<string>("SMTP_FROM") || '"Eleva One" <no-reply@elevaone.store>';
   }
 
   private async enviar(destinatario: string, assunto: string, html: string): Promise<void> {
@@ -61,7 +61,7 @@ export class EmailService {
     const html = `
       <div style="background:#161014;padding:32px 16px;font-family:-apple-system,Helvetica,Arial,sans-serif;">
         <div style="max-width:420px;margin:0 auto;background:#1c1816;border-radius:12px;padding:32px 24px;">
-          <p style="color:#E8A0B4;font-size:20px;font-weight:700;margin:0 0 20px;">Bella One</p>
+          <p style="color:#E8A0B4;font-size:20px;font-weight:700;margin:0 0 20px;">Eleva One</p>
           <p style="color:#F7EEF1;font-size:15px;margin:0 0 8px;">Olá, ${primeiroNome}!</p>
           <p style="color:#F7EEF1;font-size:15px;line-height:22px;margin:0 0 24px;">
             Recebemos um pedido para redefinir a senha da sua conta. Use o código abaixo no app — ele
@@ -75,6 +75,6 @@ export class EmailService {
           </p>
         </div>
       </div>`;
-    await this.enviar(destinatario, "Seu código de recuperação de senha — Bella One", html);
+    await this.enviar(destinatario, "Seu código de recuperação de senha — Eleva One", html);
   }
 }

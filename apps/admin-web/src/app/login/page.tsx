@@ -35,7 +35,7 @@ export default function LoginPage() {
     <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <form onSubmit={handleSubmit} style={{ width: 320, display: "flex", flexDirection: "column", gap: 14 }}>
         <div>
-          <div style={{ fontSize: 22, fontWeight: 800 }}>BellaOS</div>
+          <div style={{ fontSize: 22, fontWeight: 800 }}>Eleva One</div>
           <div style={{ fontSize: 13, color: "#837A73" }}>Painel administrativo da plataforma</div>
         </div>
         <input

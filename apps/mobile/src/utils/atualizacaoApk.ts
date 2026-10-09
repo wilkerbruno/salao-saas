@@ -28,7 +28,7 @@ import * as IntentLauncher from "expo-intent-launcher";
 // Play Store (aí a atualização do APK também passa a ser automática de
 // verdade, incluindo a instalação).
 
-const URL_VERSAO = "https://bellaone.store/downloads/versao.json";
+const URL_VERSAO = "https://elevaone.store/downloads/versao.json";
 
 interface VersaoRemota {
   versionCode: number;
@@ -66,7 +66,7 @@ export async function verificarEAtualizarApk(
   }
 
   try {
-    const destino = FileSystem.cacheDirectory + "bellaone-atualizacao.apk";
+    const destino = FileSystem.cacheDirectory + "elevaone-atualizacao.apk";
 
     const download = FileSystem.createDownloadResumable(remota.apkUrl, destino, {}, (p) => {
       if (aoProgredir && p.totalBytesExpectedToWrite > 0) {

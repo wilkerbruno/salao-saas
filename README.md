@@ -59,7 +59,7 @@ Na Home do app, a cliente pode digitar o nome do salão **ou o que procura**: "c
 
 ## Antes de publicar (placeholders)
 
-- Marca/domínio (`Bella One`, `bellaone.store`) são **provisórios**: troque no landing, e-mails, `app.json` e variáveis de ambiente.
+- Marca e domínio definidos: **Eleva One** / `elevaone.store` (subdomínios `api`, `painel`, `app`). Portas e variáveis em `docs/PRODUCAO_ELEVAONE.md`.
 - Rode `eas init` em `apps/mobile` para gerar o **projectId** próprio (nunca reutilize o de outro app).
 - Configure suas credenciais do Mercado Pago e o `JWT_SECRET` no `.env` da API (nenhum segredo do projeto original foi copiado).
 - O cartaz com QR code precisa ser **regenerado** com o domínio real.
