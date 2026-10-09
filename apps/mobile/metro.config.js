@@ -62,7 +62,15 @@ const REACT_SINGLETON = new Set(["react", "react/jsx-runtime", "react/jsx-dev-ru
 // arquivo a ser usado no bundle web também, evitando o `import.meta`.
 const ZUSTAND_CJS_ENTRY = { zustand: "index.js" };
 
+// O pacote @salao-saas/shared aponta "main" para dist/ (gerado por build e
+// ignorado no git). No build do EAS essa pasta nao existe, entao o Metro usa
+// direto o codigo-fonte TypeScript do pacote.
+const SHARED_SRC = path.join(workspaceRoot, "packages/shared/src/index.ts");
+
 config.resolver.resolveRequest = (context, moduleName, platform) => {
+  if (moduleName === "@salao-saas/shared") {
+    return { type: "sourceFile", filePath: SHARED_SRC };
+  }
   const pedindoDoCalendario = context.originModulePath.includes(`${path.sep}react-native-calendars${path.sep}`);
   if (pedindoDoCalendario && REACT_SINGLETON.has(moduleName)) {
     return context.resolveRequest({ ...context, originModulePath: origemSingleton }, moduleName, platform);

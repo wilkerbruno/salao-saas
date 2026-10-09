@@ -42,7 +42,8 @@
     ],
     "extra": {
       "eas": {
-        "_comment": "Rode `eas init` dentro de apps/mobile pra criar o projeto do app no Expo e preencher o projectId — sem ele não há push (ver src/utils/push.ts) nem atualização OTA. NÃO reaproveite o projectId de outro app."
+        "_comment": "Rode `eas init` dentro de apps/mobile pra criar o projeto do app no Expo e preencher o projectId — sem ele não há push (ver src/utils/push.ts) nem atualização OTA. NÃO reaproveite o projectId de outro app.",
+        "projectId": "5f3eb6e0-5e5c-4f96-ba8e-c7f2e790d0ee"
       }
     }
   }
