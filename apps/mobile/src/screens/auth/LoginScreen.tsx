@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Image, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { api } from "../../api/client";
@@ -49,6 +49,11 @@ export function LoginScreen({ navigation }: Props) {
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
+          <Image
+            source={require("../../../assets/logo.png")}
+            style={{ width: 200, height: 155, alignSelf: "center", marginBottom: spacing.lg }}
+            resizeMode="contain"
+          />
           <Text style={styles.title}>Entrar</Text>
           <Text style={styles.subtitle}>Acesse sua conta de cliente, funcionário ou salão</Text>
 
