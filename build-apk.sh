@@ -27,8 +27,9 @@ eas build --local --platform android --profile preview
 APK="$(ls -t build-*.apk | head -1)"
 echo "==> APK gerado: $APK"
 
-# copia o APK pra área de trabalho (WSL e Windows)
-cp "$APK" ~/Desktop/ElevaOne.apk
-cp "$APK" "/mnt/c/Users/wilke/Desktop/ElevaOne.apk"
-
-echo "==> Copiado para a Área de Trabalho."
+# copia o APK pra area de trabalho do Windows (e do WSL, se existir)
+mkdir -p ~/Desktop 2>/dev/null || true
+cp "$APK" ~/Desktop/ElevaOne.apk 2>/dev/null || true
+for d in /mnt/c/Users/wilke/Desktop /mnt/c/Users/wilke/OneDrive/Desktop; do
+  if [ -d "$d" ]; then cp "$APK" "$d/ElevaOne.apk" && echo "==> Copiado para $d/ElevaOne.apk"; fi
+done

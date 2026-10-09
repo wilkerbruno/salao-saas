@@ -16,3 +16,4 @@ coverage/
 packages/*/dist/
 *.tsbuildinfo
 .fuse_hidden*
+apps/mobile/build-*.apk
