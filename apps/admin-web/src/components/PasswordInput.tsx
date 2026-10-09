@@ -33,7 +33,7 @@ export function PasswordInput({ style, ...rest }: PasswordInputProps) {
           padding: 4,
           display: "flex",
           alignItems: "center",
-          color: "#8A766B",
+          color: "#7A5F58",
         }}
       >
         {visivel ? (

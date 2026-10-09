@@ -19,7 +19,7 @@ export default function PagamentoConfirmadoPage() {
       <div style={{ maxWidth: 380 }}>
                 <div style={{ fontSize: 40, marginBottom: 12 }}>✅</div>
         <div style={{ fontSize: 20, fontWeight: 800 }}>Pagamento em processamento</div>
-        <p style={{ color: "#8A766B", fontSize: 14, marginTop: 10, lineHeight: 1.5 }}>
+        <p style={{ color: "#7A5F58", fontSize: 14, marginTop: 10, lineHeight: 1.5 }}>
           Recebemos a autorização do Mercado Pago. Pode voltar para o aplicativo — o plano novo aparece confirmado em
           alguns instantes (puxe a tela de Assinatura para atualizar).
         </p>
