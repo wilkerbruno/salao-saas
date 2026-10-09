@@ -42,6 +42,7 @@ const SELECT_PUBLICO = {
   notaMedia: true,
   totalAvaliacoes: true,
   mercadoPagoPublicKey: true,
+  observacaoAgendamento: true,
 } as const;
 
 // Pra quem já tem acesso ao salão (dono, funcionário dele, ou SAAS_ADMIN —
@@ -171,6 +172,9 @@ export class SaloesService {
         }
       : {};
 
+    if (resto.observacaoAgendamento !== undefined) {
+      (resto as any).observacaoAgendamento = resto.observacaoAgendamento.trim() || null;
+    }
     const salao = await this.prisma.salao.update({ where: { id }, data: { ...resto, ...dadosEndereco } });
 
     if (endereco) {

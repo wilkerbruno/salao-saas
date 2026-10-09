@@ -62,6 +62,16 @@ export function BookingsScreen() {
     ]);
   }
 
+  async function confirmarPresenca(grupoId: string) {
+    try {
+      await api.patch(`/agendamentos/grupo/${grupoId}/confirmar-presenca`);
+      alertar("Presença confirmada!", "O salão foi avisado que você vai comparecer.");
+      carregar();
+    } catch (e: any) {
+      alertar("Não foi possível confirmar", e?.response?.data?.message ?? "Tente novamente.");
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <Text style={styles.title}>Meus agendamentos</Text>
@@ -110,6 +120,27 @@ export function BookingsScreen() {
                   </Text>
                 ))}
               </View>
+              {(() => {
+                const futuro = new Date(visita[0].inicio).getTime() > Date.now();
+                const ativo = status === StatusAgendamento.PENDENTE || status === StatusAgendamento.CONFIRMADO;
+                if (!futuro || !ativo) return null;
+                if (visita[0].confirmadoPeloClienteEm) {
+                  return (
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+                      <Ionicons name="checkmark-circle" size={16} color={colors.success} />
+                      <Text style={{ color: colors.success, fontWeight: "700", fontSize: 13 }}>Presença confirmada</Text>
+                    </View>
+                  );
+                }
+                const grupoId = visita[0].grupoId;
+                const em24h = new Date(visita[0].inicio).getTime() - Date.now() <= 24 * 3600 * 1000;
+                if (!grupoId || !(visita[0].lembrete24hEnviadoEm || em24h)) return null;
+                return (
+                  <Pressable style={styles.confirmarBtn} onPress={() => confirmarPresenca(grupoId)}>
+                    <Text style={styles.confirmarTexto}>Confirmar presença</Text>
+                  </Pressable>
+                );
+              })()}
               <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
                 <Text style={styles.itemTotal}>
                   {visita[0].assinaturaPacoteId ? "Incluído no pacote mensal" : centavosParaReais(total)}
@@ -139,5 +170,7 @@ const styles = StyleSheet.create({
   comoChegarTexto: { fontSize: 12, fontWeight: "700", color: colors.accent },
   itemServico: { fontSize: 13, color: colors.inkMuted },
   itemTotal: { fontWeight: "800", color: colors.ink, fontSize: 15 },
+  confirmarBtn: { backgroundColor: colors.accent, borderRadius: 10, paddingVertical: 10, alignItems: "center" },
+  confirmarTexto: { color: colors.accentInk, fontWeight: "800", fontSize: 14 },
   cancelar: { color: colors.danger, fontWeight: "700", fontSize: 13 },
 });

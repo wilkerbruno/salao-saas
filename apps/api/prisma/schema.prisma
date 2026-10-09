@@ -132,6 +132,9 @@ model Salao {
   uf          String?
   endereco  String?
   telefone  String?
+  // Aviso do dono mostrado ao cliente a cada agendamento (so pode ser fechado
+  // depois de 60s no app). Ver BookingScreen.
+  observacaoAgendamento String? @db.Text
   // Logo do salão enviada pelo dono (Mais > Logo, ou no cadastro). Guardada
   // como data URL (base64) direto no banco — já vem redimensionada/comprimida
   // pela API (ver SaloesService.atualizarLogo) então fica pequena o
@@ -494,6 +497,8 @@ model Servico {
   ativo           Boolean  @default(true)
   // Área do serviço (cabelo, unha...) — ver enum CategoriaServico.
   categoria       CategoriaServico @default(CABELO)
+  // Observacao especifica deste servico, exibida junto do aviso do salao.
+  observacao      String?  @db.Text
 
   agendamentos      Agendamento[]
   pacotesQueIncluem PacoteServico[]
@@ -558,6 +563,10 @@ model Agendamento {
   // linha própria (com sua duração/preço/horário sequencial), só a exibição e
   // o cancelamento tratam o grupo como um agendamento só (ver AgendamentosService).
   grupoId       String?
+
+  // Lembrete de 24h: quando o push foi enviado e quando o cliente confirmou.
+  lembrete24hEnviadoEm DateTime?
+  confirmadoPeloClienteEm DateTime?
 
   // Preenchido quando o cliente usou a cota do pacote mensal pra esse
   // horário em vez de pagar avulso (ver PacotesMensaisService) — nesse caso

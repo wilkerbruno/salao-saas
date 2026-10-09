@@ -77,6 +77,12 @@ export class AgendamentosController {
     return this.agendamentosService.listarAgendaSalao(user.salaoId, inicio, fim, funcionarioId);
   }
 
+  @Roles(Papel.CLIENTE)
+  @Patch("grupo/:grupoId/confirmar-presenca")
+  confirmarPresenca(@Param("grupoId") grupoId: string, @CurrentUser() user: AuthUser) {
+    return this.agendamentosService.confirmarPresenca(grupoId, user.id);
+  }
+
   @Patch(":id/cancelar")
   cancelar(@Param("id") id: string, @CurrentUser() user: AuthUser) {
     return this.agendamentosService.cancelar(id, user);

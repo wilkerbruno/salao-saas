@@ -29,12 +29,14 @@ export class ServicosService {
   // ---------- Gestão (SALAO_ADMIN) ----------
 
   criarServico(salaoId: string, dto: CreateServicoDto) {
-    return this.prisma.servico.create({ data: { ...dto, salaoId } });
+    return this.prisma.servico.create({ data: { ...dto, observacao: dto.observacao?.trim() || null, salaoId } });
   }
 
   async atualizarServico(id: string, salaoId: string, dto: UpdateServicoDto) {
     await this.garantirServicoDaSalao(id, salaoId);
-    return this.prisma.servico.update({ where: { id }, data: dto });
+    const data = { ...dto } as any;
+    if (dto.observacao !== undefined) data.observacao = dto.observacao.trim() || null;
+    return this.prisma.servico.update({ where: { id }, data });
   }
 
   async removerServico(id: string, salaoId: string) {

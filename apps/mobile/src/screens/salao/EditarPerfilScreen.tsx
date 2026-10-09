@@ -29,6 +29,7 @@ export function EditarPerfilScreen() {
   const [nomeSalao, setNomeSalao] = useState("");
   const [enderecoSalao, setEnderecoSalao] = useState(ENDERECO_VAZIO);
   const [telefoneSalao, setTelefoneSalao] = useState("");
+  const [observacaoAgendamento, setObservacaoAgendamento] = useState("");
   const [erro, setErro] = useState<string | null>(null);
   const [sucesso, setSucesso] = useState(false);
   const [salvando, setSalvando] = useState(false);
@@ -49,6 +50,7 @@ export function EditarPerfilScreen() {
         uf: data.uf ?? "",
       });
       setTelefoneSalao(data.telefone ?? "");
+      setObservacaoAgendamento(data.observacaoAgendamento ?? "");
     } finally {
       setCarregando(false);
     }
@@ -78,6 +80,7 @@ export function EditarPerfilScreen() {
           nome: nomeSalao.trim(),
           endereco: enderecoParaApi(enderecoSalao),
           telefone: telefoneSalao.trim(),
+          observacaoAgendamento: observacaoAgendamento.trim(),
         }),
       ]);
       await atualizarUsuario(usuarioAtualizado);
@@ -147,6 +150,21 @@ export function EditarPerfilScreen() {
                 placeholder="(11) 91234-5678"
               />
             </View>
+            <View style={styles.field}>
+              <Text style={styles.label}>Aviso para o cliente ao agendar</Text>
+              <TextInput
+                value={observacaoAgendamento}
+                onChangeText={setObservacaoAgendamento}
+                multiline
+                maxLength={2000}
+                style={[styles.input, { minHeight: 96, textAlignVertical: "top" }]}
+                placeholder="Ex: Tolerância de 10 minutos de atraso. Chegue com o cabelo lavado."
+              />
+            </View>
+            <Text style={styles.hint}>
+              Esse aviso aparece pro cliente a cada agendamento, e ele só consegue fechar depois de 60 segundos. Deixe
+              vazio para não mostrar nada.
+            </Text>
             <Text style={styles.hint}>
               É esse telefone que o cliente usa pra te ligar em "Meus agendamentos". A localização por GPS usada na
               busca "Perto de você" continua em Mais {">"} Localização.

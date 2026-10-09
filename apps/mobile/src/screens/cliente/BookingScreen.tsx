@@ -23,6 +23,7 @@ import {
 import { api } from "../../api/client";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
+import { AvisoAgendamentoModal, AvisoItem } from "../../components/AvisoAgendamentoModal";
 import { CategoriaChips } from "../../components/CategoriaChips";
 import { alertar } from "../../utils/alertaCompat";
 import { colors, radius, spacing } from "../../theme/tokens";
@@ -106,6 +107,8 @@ export function BookingScreen({ route, navigation }: Props) {
   const [simultaneo, setSimultaneo] = useState(false);
   const [formaPagamento, setFormaPagamento] = useState<FormaPagamento>(MetodoPagamento.PIX);
   const [enviando, setEnviando] = useState(false);
+  const [avisoSalao, setAvisoSalao] = useState<string | null>(null);
+  const [avisosModal, setAvisosModal] = useState<AvisoItem[] | null>(null);
 
   // Assinaturas ATIVAS do cliente nesse salão — usadas pra oferecer "usar
   // meu pacote mensal" quando ela cobrir os serviços/dia/cota escolhidos (a
@@ -125,6 +128,10 @@ export function BookingScreen({ route, navigation }: Props) {
   // profissional") e já marca o que veio por parâmetro (quando o cliente
   // escolheu tudo direto na Home).
   useEffect(() => {
+    api
+      .get<{ observacaoAgendamento?: string | null }>(`/saloes/${salaoId}/publico`)
+      .then((r) => setAvisoSalao(r.data?.observacaoAgendamento?.trim() || null))
+      .catch(() => setAvisoSalao(null));
     Promise.all([
       api.get<Servico[]>(`/saloes/${salaoId}/servicos`),
       api.get<Pacote[]>(`/saloes/${salaoId}/pacotes`),
@@ -354,7 +361,31 @@ export function BookingScreen({ route, navigation }: Props) {
     return Object.keys(resultado).length > 0 ? resultado : undefined;
   }
 
-  async function confirmar() {
+  // Antes de agendar, mostra o aviso do salão + observações dos serviços
+  // escolhidos (inclusive os de dentro de pacotes); só libera após 60s.
+  function confirmar() {
+    const avisos: AvisoItem[] = [];
+    if (avisoSalao) avisos.push({ titulo: "Aviso do salão", texto: avisoSalao });
+    const vistos = new Set<string>();
+    const add = (nome: string, obs?: string | null) => {
+      const t = obs?.trim();
+      if (!t || vistos.has(nome + t)) return;
+      vistos.add(nome + t);
+      avisos.push({ titulo: nome, texto: t });
+    };
+    for (const s of servicos) if ((quantidades[s.id] ?? 0) > 0) add(s.nome, s.observacao);
+    for (const p of pacotes) {
+      if ((quantidadesPacotes[p.id] ?? 0) <= 0) continue;
+      for (const ps of p.servicos) add(ps.servico.nome, (ps.servico as { observacao?: string | null }).observacao);
+    }
+    if (avisos.length === 0) {
+      void executarConfirmacao();
+      return;
+    }
+    setAvisosModal(avisos);
+  }
+
+  async function executarConfirmacao() {
     if (!diaSelecionado || !horarioSelecionado || itensSelecionados.length === 0) return;
     // Offset fixo do horário de Brasília: evita depender do fuso configurado
     // no aparelho do cliente pra não agendar num horário errado.
@@ -759,6 +790,14 @@ export function BookingScreen({ route, navigation }: Props) {
           </>
         )}
       </ScrollView>
+      <AvisoAgendamentoModal
+        visivel={avisosModal !== null}
+        avisos={avisosModal ?? []}
+        onConcordar={() => {
+          setAvisosModal(null);
+          void executarConfirmacao();
+        }}
+      />
     </SafeAreaView>
   );
 }

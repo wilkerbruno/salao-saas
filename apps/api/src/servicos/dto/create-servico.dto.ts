@@ -1,4 +1,4 @@
-import { IsIn, IsInt, IsOptional, IsPositive, IsString, Min } from "class-validator";
+import { IsIn, IsInt, IsOptional, IsPositive, IsString, MaxLength, Min } from "class-validator";
 import { CategoriaServico } from "@salao-saas/shared";
 
 export class CreateServicoDto {
@@ -23,4 +23,10 @@ export class CreateServicoDto {
   @IsOptional()
   @IsIn(Object.values(CategoriaServico))
   categoria?: CategoriaServico;
+
+  // Observacao exibida ao cliente na hora de agendar este servico.
+  @IsOptional()
+  @IsString()
+  @MaxLength(2000)
+  observacao?: string;
 }

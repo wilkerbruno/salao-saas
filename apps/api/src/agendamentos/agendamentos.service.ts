@@ -954,6 +954,74 @@ export class AgendamentosService {
     return this.prisma.agendamento.findMany({ where: { grupoId: agendamento.grupoId } });
   }
 
+  // Cron a cada 10 minutos: lembrete 24h antes pedindo ao cliente que confirme
+  // o agendamento (dia, horario e servicos). Um push por grupo. So avisa quem
+  // marcou com mais de 24h de antecedencia (quem marcou "para amanha" ja sabe).
+  @Cron("0 */10 * * * *")
+  async enviarLembretes24h() {
+    const agora = new Date();
+    const limite = new Date(agora.getTime() + 24 * 3600_000);
+    const candidatos = await this.prisma.agendamento.findMany({
+      where: {
+        origem: OrigemAgendamento.CLIENTE_APP,
+        status: StatusAgendamento.CONFIRMADO,
+        clienteId: { not: null },
+        grupoId: { not: null },
+        lembrete24hEnviadoEm: null,
+        inicio: { gt: agora, lte: limite },
+      },
+      include: {
+        servico: { select: { nome: true } },
+        pacote: { select: { nome: true } },
+        salao: { select: { nome: true } },
+        cliente: { select: { pushToken: true } },
+      },
+      orderBy: { inicio: "asc" },
+    });
+    const grupos = new Map<string, typeof candidatos>();
+    for (const a of candidatos) {
+      // marcou com menos de 24h de antecedencia: nao precisa de lembrete
+      if (a.inicio.getTime() - a.criadoEm.getTime() < 24 * 3600_000) continue;
+      const lista = grupos.get(a.grupoId as string) ?? [];
+      lista.push(a);
+      grupos.set(a.grupoId as string, lista);
+    }
+    for (const [grupoId, itens] of grupos) {
+      const primeiro = itens[0];
+      const quando = primeiro.inicio.toLocaleString("pt-BR", {
+        timeZone: "America/Sao_Paulo",
+        weekday: "long",
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      const nomes = [...new Set(itens.map((i) => i.servico?.nome ?? i.pacote?.nome).filter(Boolean))].join(", ");
+      await this.push.enviarParaTokens(
+        [primeiro.cliente?.pushToken ?? null],
+        "Confirme seu agendamento",
+        `${quando} - ${nomes} em ${primeiro.salao.nome}. Toque para confirmar sua presenca.`,
+        { tipo: "CONFIRMAR_AGENDAMENTO", grupoId },
+      );
+      await this.prisma.agendamento.updateMany({ where: { grupoId }, data: { lembrete24hEnviadoEm: new Date() } });
+    }
+  }
+
+  // Cliente confirma presenca (todos os servicos do grupo).
+  async confirmarPresenca(grupoId: string, clienteId: string) {
+    const r = await this.prisma.agendamento.updateMany({
+      where: {
+        grupoId,
+        clienteId,
+        status: { in: [StatusAgendamento.CONFIRMADO, StatusAgendamento.PENDENTE] },
+        inicio: { gt: new Date() },
+      },
+      data: { confirmadoPeloClienteEm: new Date() },
+    });
+    if (r.count === 0) throw new NotFoundException("Agendamento nao encontrado ou ja passou.");
+    return { confirmado: true };
+  }
+
   // Cron a cada minuto: avisa por push o funcionário responsável assim que
   // chega o horário de um agendamento com Dinheiro ainda PENDENTE de
   // confirmação — é a rede de segurança pedida pra evitar o cliente sair sem

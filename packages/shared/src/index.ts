@@ -179,6 +179,8 @@ export interface Salao extends EnderecoCampos {
   nome: string;
   slug: string;
   telefone?: string | null;
+  // Aviso do dono exibido ao cliente a cada agendamento.
+  observacaoAgendamento?: string | null;
   latitude?: number | null;
   longitude?: number | null;
   // Data URL (base64) da logo, já redimensionada pela API — ver
@@ -229,6 +231,8 @@ export interface Servico {
   precoCentavos: number;
   ativo: boolean;
   categoria: CategoriaServico;
+  // Observacao exibida ao cliente na hora de agendar (aviso de 60s).
+  observacao?: string | null;
 }
 
 // Um serviço incluído num pacote, com o serviço já populado — é assim que a
@@ -417,6 +421,9 @@ export interface Agendamento {
   assinaturaPacoteId?: string | null;
   // Só quando status = NAO_COMPARECEU: os 50% retidos como multa.
   valorMultaCentavos?: number | null;
+  // Lembrete de 24h antes: enviado em / confirmado pelo cliente em.
+  lembrete24hEnviadoEm?: string | null;
+  confirmadoPeloClienteEm?: string | null;
   // A API sempre devolve esses relacionamentos populados via `include` (ver
   // AgendamentosService) — opcionais aqui só porque nem toda rota inclui todos
   // (ex: listarAgendaFuncionario não inclui `funcionario`, já que é o próprio).

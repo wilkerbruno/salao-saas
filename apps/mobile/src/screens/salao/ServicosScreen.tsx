@@ -11,7 +11,7 @@ import { Card } from "../../components/Card";
 import { CategoriaChips } from "../../components/CategoriaChips";
 import { colors, radius, spacing } from "../../theme/tokens";
 
-const SERVICO_VAZIO = { nome: "", duracaoMinutos: "30", precoReais: "", descricao: "", categoria: "CABELO" as CategoriaServico };
+const SERVICO_VAZIO = { nome: "", duracaoMinutos: "30", precoReais: "", descricao: "", observacao: "", categoria: "CABELO" as CategoriaServico };
 
 // Onde o salão "coloca preço nos trabalhos" — o pedido original do produto.
 // Pacotes (agrupar vários serviços com um preço próprio) já existem na API
@@ -52,6 +52,7 @@ export function ServicosScreen() {
       duracaoMinutos: String(servico.duracaoMinutos),
       precoReais: (servico.precoCentavos / 100).toFixed(2),
       descricao: servico.descricao ?? "",
+      observacao: servico.observacao ?? "",
       categoria: servico.categoria ?? "CABELO",
     });
     setFormAberto(true);
@@ -70,7 +71,7 @@ export function ServicosScreen() {
       return alertar("Preço inválido", "Digite um preço maior que zero (ex: 45,00).");
     }
 
-    const dto = { nome, duracaoMinutos, precoCentavos, descricao: campos.descricao.trim() || undefined, categoria: campos.categoria };
+    const dto = { nome, duracaoMinutos, precoCentavos, descricao: campos.descricao.trim() || undefined, observacao: campos.observacao.trim(), categoria: campos.categoria };
     setSalvando(true);
     try {
       if (editandoId) {
@@ -147,6 +148,14 @@ export function ServicosScreen() {
                 placeholder="Descrição (opcional)"
                 placeholderTextColor={colors.inkMuted}
                 style={styles.input}
+              />
+              <TextInput
+                value={campos.observacao}
+                onChangeText={(observacao) => setCampos((c) => ({ ...c, observacao }))}
+                placeholder="Observação para o cliente ao agendar (opcional)"
+                placeholderTextColor={colors.inkMuted}
+                multiline
+                style={[styles.input, { minHeight: 72, textAlignVertical: "top" }]}
               />
               <View style={{ flexDirection: "row", gap: spacing.sm }}>
                 <View style={{ flex: 1 }}>

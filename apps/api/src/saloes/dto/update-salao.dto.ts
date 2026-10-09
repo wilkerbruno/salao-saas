@@ -1,4 +1,4 @@
-import { IsLatitude, IsLongitude, IsOptional, IsString, ValidateNested } from "class-validator";
+import { IsLatitude, IsLongitude, IsOptional, IsString, MaxLength, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 import { EnderecoDto } from "../../common/dto/endereco.dto";
 
@@ -18,6 +18,12 @@ export class UpdateSalaoDto {
   @IsOptional()
   @IsString()
   telefone?: string;
+
+  // Aviso exibido ao cliente em todo agendamento (string vazia limpa).
+  @IsOptional()
+  @IsString()
+  @MaxLength(2000)
+  observacaoAgendamento?: string;
 
   // Preenchidos pela tela "Mais > Localização" do app (captura o GPS do
   // celular de quem está logado como dono do salão).
