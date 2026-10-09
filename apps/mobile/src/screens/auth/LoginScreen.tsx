@@ -27,7 +27,11 @@ export function LoginScreen({ navigation }: Props) {
       // Não precisa navegar manualmente: o RootNavigator troca de stack
       // sozinho assim que `usuario` muda no authStore.
     } catch (e: any) {
-      setErro(e?.response?.data?.message ?? "Não foi possível entrar. Confira seus dados.");
+      if (!e?.response) {
+        setErro("Sem conexão com o servidor. Verifique a internet ou tente novamente em instantes.");
+      } else {
+        setErro(e.response.data?.message ?? `Não foi possível entrar (erro ${e.response.status}).`);
+      }
     } finally {
       setCarregando(false);
     }
