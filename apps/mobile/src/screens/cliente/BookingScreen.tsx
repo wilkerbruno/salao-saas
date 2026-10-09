@@ -512,7 +512,7 @@ export function BookingScreen({ route, navigation }: Props) {
                         <View style={{ flex: 1 }}>
                           <Text style={styles.itemNome}>{s.nome}</Text>
                           <Text style={styles.itemMeta}>
-                            {s.duracaoMinutos} min · {centavosParaReais(s.precoCentavos)}
+                            {centavosParaReais(s.precoCentavos)}
                           </Text>
                           {s.descricao ? <Text style={styles.itemMeta}>{s.descricao}</Text> : null}
                         </View>
@@ -545,7 +545,7 @@ export function BookingScreen({ route, navigation }: Props) {
                             {p.nome}
                           </Text>
                           <Text style={styles.itemMeta}>
-                            {duracaoDoPacote(p)} min · {centavosParaReais(p.precoCentavos)}
+                            {centavosParaReais(p.precoCentavos)}
                           </Text>
                           {p.descricao && <Text style={styles.itemMeta}>{p.descricao}</Text>}
                         </View>
@@ -576,7 +576,7 @@ export function BookingScreen({ route, navigation }: Props) {
                       {item.quantidade}x {item.nome}
                     </Text>
                     <Text style={styles.itemMeta}>
-                      {item.duracaoMinutos} min · {centavosParaReais(item.precoCentavos)}
+                      {centavosParaReais(item.precoCentavos)}
                     </Text>
                   </View>
                 </Card>
@@ -591,8 +591,7 @@ export function BookingScreen({ route, navigation }: Props) {
         {totalItens > 0 && (
           <Card style={styles.resumoCard}>
             <Text style={styles.resumoTexto}>
-              {totalItens} {totalItens === 1 ? "item" : "itens"} selecionado{totalItens === 1 ? "" : "s"} · ~
-              {duracaoDoAtendimentoMinutos} min
+              {totalItens} {totalItens === 1 ? "item" : "itens"} selecionado{totalItens === 1 ? "" : "s"}
             </Text>
             <Text style={styles.resumoValor}>{centavosParaReais(precoTotalCentavos)}</Text>
           </Card>
@@ -717,7 +716,7 @@ export function BookingScreen({ route, navigation }: Props) {
                           {etapa.nome}
                         </Text>
                         <Text style={styles.itemMeta}>
-                          {etapa.duracaoMinutos} min · {quem ? `com ${quem}` : "profissional disponível na hora"}
+                          {quem ? `com ${quem}` : "profissional disponível na hora"}
                         </Text>
                       </View>
                     </View>
@@ -738,7 +737,7 @@ export function BookingScreen({ route, navigation }: Props) {
               <View style={styles.divisor} />
               <View style={styles.confirmLinha}>
                 <Text style={styles.confirmTotalLabel}>
-                  Total (~{duracaoDoAtendimentoMinutos} min, termina às {fimDoAtendimento})
+                  Total
                 </Text>
                 <Text style={styles.confirmTotalValor}>{centavosParaReais(precoTotalCentavos)}</Text>
               </View>

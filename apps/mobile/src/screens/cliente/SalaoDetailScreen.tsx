@@ -183,7 +183,6 @@ export function SalaoDetailScreen({ route, navigation }: Props) {
                         />
                         <View>
                           <Text style={styles.itemName}>{item.nome}</Text>
-                          <Text style={styles.itemMeta}>{item.duracaoMinutos} min</Text>
                         </View>
                       </View>
                       <PriceTag centavos={item.precoCentavos} />
