@@ -5,13 +5,13 @@ set -e
 # aberto (esse é o bug recorrente: abrir o wsl de dentro de C:\Users\wilke
 # ou de apps\api faz o eas/git rodar no lugar errado). Ajuste o caminho
 # abaixo se a pasta mudar de lugar.
-cd /mnt/c/Users/wilke/Downloads/salao-saas
+cd /mnt/c/Users/wilke/Downloads/salao-saas-git
 
 echo "==> Repo: $(pwd)"
 
 # traz as correções mais recentes — só funciona se você já deu commit + push
 # pela pasta do Downloads (PowerShell/GitHub Desktop) antes de rodar isso.
-git pull origin main
+git pull origin main || true
 
 pnpm install
 
