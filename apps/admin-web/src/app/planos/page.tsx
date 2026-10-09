@@ -101,7 +101,7 @@ function CamposPlano({ form, onChange }: { form: PlanoForm; onChange: (form: Pla
         style={{ ...inputStyle, resize: "vertical", fontFamily: "inherit" }}
       />
       <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-        <span style={{ fontSize: 12.5, color: "#7A5F58", flex: 1 }}>Desconto no plano anual (opcional)</span>
+        <span style={{ fontSize: 12.5, color: "#664A43", flex: 1 }}>Desconto no plano anual (opcional)</span>
         <select
           value={form.descontoAnualTipo}
           onChange={(e) => onChange({ ...form, descontoAnualTipo: e.target.value as TipoDesconto })}
@@ -117,7 +117,7 @@ function CamposPlano({ form, onChange }: { form: PlanoForm; onChange: (form: Pla
           style={{ ...inputStyle, flex: 1 }}
         />
       </div>
-      <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingTop: 4, borderTop: "1px solid #EBBDBD" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 8, paddingTop: 4, borderTop: "1px solid #DCA0A0" }}>
         <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
           <input
             type="checkbox"
@@ -136,7 +136,7 @@ function CamposPlano({ form, onChange }: { form: PlanoForm; onChange: (form: Pla
         )}
       </div>
       {form.precoReais && !Number.isNaN(parseFloat(form.precoReais.replace(",", "."))) && (
-        <div style={{ fontSize: 12, color: "#7A5F58" }}>
+        <div style={{ fontSize: 12, color: "#664A43" }}>
           Preço anual resultante:{" "}
           <strong style={{ color: "#4B3A31" }}>
             {centavosParaReais(
@@ -257,7 +257,7 @@ export default function PlanosPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
           <h1 style={{ fontSize: 24, fontWeight: 800 }}>Planos e preços</h1>
-          <p style={{ color: "#7A5F58", fontSize: 13 }}>Defina os valores cobrados de cada salão assinante</p>
+          <p style={{ color: "#664A43", fontSize: 13 }}>Defina os valores cobrados de cada salão assinante</p>
         </div>
         <button onClick={() => setFormAberto((v) => !v)} style={btnPrimary}>
           {formAberto ? "Cancelar" : "+ Novo plano"}
@@ -299,17 +299,17 @@ export default function PlanosPage() {
               <>
                 <div style={{ fontSize: 28, fontWeight: 800, marginTop: 6 }}>
                   {centavosParaReais(plano.precoCentavos)}
-                  <span style={{ fontSize: 13, color: "#7A5F58", fontWeight: 600 }}>/mês</span>
+                  <span style={{ fontSize: 13, color: "#664A43", fontWeight: 600 }}>/mês</span>
                 </div>
-                <div style={{ fontSize: 12, color: "#7A5F58", marginTop: 2 }}>
+                <div style={{ fontSize: 12, color: "#664A43", marginTop: 2 }}>
                   {plano.limiteFuncionarios == null ? "Funcionários ilimitados" : `Até ${plano.limiteFuncionarios} funcionário(s)`}
                 </div>
 
-                <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #EBBDBD" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#7A5F58", textTransform: "uppercase" }}>Plano anual</div>
+                <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #DCA0A0" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#664A43", textTransform: "uppercase" }}>Plano anual</div>
                   <div style={{ fontSize: 15, fontWeight: 800, marginTop: 4 }}>
                     {centavosParaReais(calcularPrecoAnualCentavos(plano.precoCentavos, plano.descontoAnualTipo, plano.descontoAnualValor))}
-                    <span style={{ fontSize: 12, color: "#7A5F58", fontWeight: 600 }}>
+                    <span style={{ fontSize: 12, color: "#664A43", fontWeight: 600 }}>
                       {" "}
                       (
                       {plano.descontoAnualTipo === TipoDesconto.PERCENTUAL
@@ -320,8 +320,8 @@ export default function PlanosPage() {
                   </div>
                 </div>
 
-                <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #EBBDBD" }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: "#7A5F58", textTransform: "uppercase" }}>
+                <div style={{ marginTop: 14, paddingTop: 12, borderTop: "1px solid #DCA0A0" }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#664A43", textTransform: "uppercase" }}>
                     Suporte prioritário
                   </div>
                   <div style={{ fontSize: 13, fontWeight: 700, marginTop: 4 }}>
@@ -329,7 +329,7 @@ export default function PlanosPage() {
                   </div>
                 </div>
 
-                <ul style={{ marginTop: 14, paddingLeft: 18, fontSize: 12.5, color: "#7A5F58" }}>
+                <ul style={{ marginTop: 14, paddingLeft: 18, fontSize: 12.5, color: "#664A43" }}>
                   {plano.recursos.map((r) => (
                     <li key={r}>{r}</li>
                   ))}
@@ -363,10 +363,10 @@ export default function PlanosPage() {
   );
 }
 
-const cardStyle: React.CSSProperties = { border: "1px solid #DDA9A9", borderRadius: 16, padding: 22, background: "#FBE6E4" };
+const cardStyle: React.CSSProperties = { border: "1px solid #CC8C8C", borderRadius: 16, padding: 22, background: "#F5D9D7" };
 const btnBase: React.CSSProperties = { border: "none", borderRadius: 9, padding: "9px 14px", fontWeight: 700, fontSize: 13, cursor: "pointer" };
 const btnPrimary: React.CSSProperties = { ...btnBase, background: "#A8782A", color: "white" };
-const btnSecondary: React.CSSProperties = { ...btnBase, border: "1px solid #DDA9A9", background: "#FBE6E4" };
-const btnLink: React.CSSProperties = { ...btnBase, background: "none", color: "#7A5F58", padding: "4px 0", textAlign: "left" };
-const inputStyle: React.CSSProperties = { border: "1px solid #DDA9A9", borderRadius: 9, padding: "10px 12px", fontSize: 13 };
-const badgeStyle: React.CSSProperties = { fontSize: 11, fontWeight: 700, color: "#7A5F58", background: "#EBBDBD", padding: "3px 8px", borderRadius: 999 };
+const btnSecondary: React.CSSProperties = { ...btnBase, border: "1px solid #CC8C8C", background: "#F5D9D7" };
+const btnLink: React.CSSProperties = { ...btnBase, background: "none", color: "#664A43", padding: "4px 0", textAlign: "left" };
+const inputStyle: React.CSSProperties = { border: "1px solid #CC8C8C", borderRadius: 9, padding: "10px 12px", fontSize: 13 };
+const badgeStyle: React.CSSProperties = { fontSize: 11, fontWeight: 700, color: "#664A43", background: "#DCA0A0", padding: "3px 8px", borderRadius: 999 };

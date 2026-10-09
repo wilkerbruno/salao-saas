@@ -59,8 +59,8 @@ export class EmailService {
   async enviarCodigoRecuperacaoSenha(destinatario: string, nome: string, codigo: string): Promise<void> {
     const primeiroNome = nome.trim().split(" ")[0] || nome;
     const html = `
-      <div style="background:#F2CFCF;padding:32px 16px;font-family:-apple-system,Helvetica,Arial,sans-serif;">
-        <div style="max-width:420px;margin:0 auto;background:#FBE6E4;border:1px solid #DDA9A9;border-radius:12px;padding:32px 24px;">
+      <div style="background:#E6B4B4;padding:32px 16px;font-family:-apple-system,Helvetica,Arial,sans-serif;">
+        <div style="max-width:420px;margin:0 auto;background:#F5D9D7;border:1px solid #CC8C8C;border-radius:12px;padding:32px 24px;">
           <p style="color:#A8782A;font-size:20px;font-weight:700;margin:0 0 20px;">Eleva One</p>
           <p style="color:#4B3A31;font-size:15px;margin:0 0 8px;">Olá, ${primeiroNome}!</p>
           <p style="color:#4B3A31;font-size:15px;line-height:22px;margin:0 0 24px;">
@@ -70,7 +70,7 @@ export class EmailService {
           <p style="color:#A8782A;font-size:32px;font-weight:800;letter-spacing:8px;text-align:center;margin:0 0 24px;">
             ${codigo}
           </p>
-          <p style="color:#7A5F58;font-size:12px;line-height:18px;margin:0;">
+          <p style="color:#664A43;font-size:12px;line-height:18px;margin:0;">
             Se você não pediu essa alteração, pode ignorar este e-mail — sua senha continua a mesma.
           </p>
         </div>

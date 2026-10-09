@@ -65,7 +65,7 @@ export default function ConfiguracoesPage() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800 }}>Configurações</h1>
-      <p style={{ color: "#7A5F58", fontSize: 13 }}>Parâmetros globais do SaaS — valem para todas os salões</p>
+      <p style={{ color: "#664A43", fontSize: 13 }}>Parâmetros globais do SaaS — valem para todas os salões</p>
 
       <form onSubmit={salvar} style={{ ...cardStyle, marginTop: 24, maxWidth: 480, display: "flex", flexDirection: "column", gap: 18 }}>
         {erro && <div style={{ color: "#A8782A", fontSize: 13 }}>{erro}</div>}
@@ -126,8 +126,8 @@ export default function ConfiguracoesPage() {
   );
 }
 
-const cardStyle: React.CSSProperties = { border: "1px solid #DDA9A9", borderRadius: 16, padding: 22, background: "#FBE6E4" };
+const cardStyle: React.CSSProperties = { border: "1px solid #CC8C8C", borderRadius: 16, padding: 22, background: "#F5D9D7" };
 const labelStyle: React.CSSProperties = { display: "block", fontSize: 13, fontWeight: 700, marginBottom: 6 };
-const inputStyle: React.CSSProperties = { border: "1px solid #DDA9A9", borderRadius: 9, padding: "10px 12px", fontSize: 14, width: 140 };
-const hintStyle: React.CSSProperties = { fontSize: 12, color: "#7A5F58", marginTop: 6, lineHeight: 1.5 };
+const inputStyle: React.CSSProperties = { border: "1px solid #CC8C8C", borderRadius: 9, padding: "10px 12px", fontSize: 14, width: 140 };
+const hintStyle: React.CSSProperties = { fontSize: 12, color: "#664A43", marginTop: 6, lineHeight: 1.5 };
 const btnPrimary: React.CSSProperties = { border: "none", borderRadius: 9, padding: "9px 14px", fontWeight: 700, fontSize: 13, cursor: "pointer", background: "#A8782A", color: "white" };

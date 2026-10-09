@@ -49,8 +49,8 @@ export function Sidebar() {
 const styles: Record<string, React.CSSProperties> = {
   sidebar: {
     width: 240,
-    background: "#F8DADA",
-    borderRight: "1px solid #DDA9A9",
+    background: "#EEC3C3",
+    borderRight: "1px solid #CC8C8C",
     color: "#4B3A31",
     display: "flex",
     flexDirection: "column",
@@ -58,7 +58,7 @@ const styles: Record<string, React.CSSProperties> = {
     gap: 24,
   },
   brand: { fontWeight: 800, fontSize: 16, padding: "0 8px" },
-  link: { padding: "11px 12px", borderRadius: 10, color: "#7A5F58", textDecoration: "none", fontSize: 13, fontWeight: 600 },
-  linkActive: { background: "#F3DDB5", color: "#4B3A31" },
-  logout: { background: "none", border: "none", color: "#7A5F58", textAlign: "left", padding: "11px 12px", cursor: "pointer", fontSize: 13 },
+  link: { padding: "11px 12px", borderRadius: 10, color: "#664A43", textDecoration: "none", fontSize: 13, fontWeight: 600 },
+  linkActive: { background: "#EACB97", color: "#4B3A31" },
+  logout: { background: "none", border: "none", color: "#664A43", textAlign: "left", padding: "11px 12px", cursor: "pointer", fontSize: 13 },
 };

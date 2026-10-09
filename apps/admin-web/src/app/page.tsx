@@ -40,7 +40,7 @@ export default function DashboardPage() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800 }}>Visão geral</h1>
-      <p style={{ color: "#7A5F58", fontSize: 13 }}>Desempenho da plataforma entre todas os salões assinantes</p>
+      <p style={{ color: "#664A43", fontSize: 13 }}>Desempenho da plataforma entre todas os salões assinantes</p>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 28 }}>
         <Card label="MRR (receita contratada)" value={centavosParaReais(mrrCentavos)} />
@@ -58,13 +58,13 @@ function Card({ label, value, highlight }: { label: string; value: string; highl
   return (
     <div
       style={{
-        border: `1px solid ${highlight ? "#E6C9A0" : "#DDA9A9"}`,
+        border: `1px solid ${highlight ? "#E6C9A0" : "#CC8C8C"}`,
         borderRadius: 14,
         padding: 18,
-        background: highlight ? "#FBF0DD" : "#FBE6E4",
+        background: highlight ? "#FBF0DD" : "#F5D9D7",
       }}
     >
-      <div style={{ fontSize: 12, color: "#7A5F58" }}>{label}</div>
+      <div style={{ fontSize: 12, color: "#664A43" }}>{label}</div>
       <div style={{ fontSize: 26, fontWeight: 800, marginTop: 6, color: highlight ? "#A8782A" : "#4B3A31" }}>{value}</div>
     </div>
   );

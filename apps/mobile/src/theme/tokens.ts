@@ -3,14 +3,14 @@
 // os nomes abaixo (colors.*, nunca hex direto), então trocar a paleta aqui
 // muda o app inteiro.
 export const colors = {
-  background: "#F2CFCF",
-  surface: "#FBE6E4",
-  surfaceAlt: "#EBBDBD",
+  background: "#E6B4B4",
+  surface: "#F5D9D7",
+  surfaceAlt: "#DCA0A0",
   ink: "#4B3A31",
-  inkMuted: "#7A5F58",
-  border: "#DDA9A9",
+  inkMuted: "#664A43",
+  border: "#CC8C8C",
   accent: "#A8782A", // dourado - cor de destaque (botoes, icone ativo, estrelas)
-  accentSoft: "#F3DDB5",
+  accentSoft: "#EACB97",
   accentInk: "#FFFFFF", // texto sobre o dourado
   success: "#3F8F62",
   successSoft: "#E1F1E7",

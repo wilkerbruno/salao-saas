@@ -37,7 +37,7 @@ export default function LoginPage() {
         <div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/logo.png" alt="Eleva One" style={{ width: 200, height: "auto", display: "block", marginBottom: 6 }} />
-          <div style={{ fontSize: 13, color: "#7A5F58" }}>Painel administrativo da plataforma</div>
+          <div style={{ fontSize: 13, color: "#664A43" }}>Painel administrativo da plataforma</div>
         </div>
         <input
           value={email}
@@ -62,7 +62,7 @@ export default function LoginPage() {
 }
 
 const inputStyle: React.CSSProperties = {
-  border: "1px solid #DDA9A9",
+  border: "1px solid #CC8C8C",
   borderRadius: 10,
   padding: "12px 14px",
   fontSize: 14,

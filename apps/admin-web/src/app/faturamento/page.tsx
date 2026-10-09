@@ -40,7 +40,7 @@ export default function FaturamentoPage() {
   return (
     <div>
       <h1 style={{ fontSize: 24, fontWeight: 800 }}>Faturamento</h1>
-      <p style={{ color: "#7A5F58", fontSize: 13 }}>Cobranças recorrentes dos salões assinantes, via Mercado Pago</p>
+      <p style={{ color: "#664A43", fontSize: 13 }}>Cobranças recorrentes dos salões assinantes, via Mercado Pago</p>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 16, marginTop: 20 }}>
         <StatCard label="Recebido" value={centavosParaReais(totais.paga)} />
@@ -54,7 +54,7 @@ export default function FaturamentoPage() {
             key={f}
             onClick={() => setFiltro(f)}
             style={{
-              border: "1px solid #DDA9A9",
+              border: "1px solid #CC8C8C",
               borderRadius: 999,
               padding: "6px 14px",
               fontSize: 12,
@@ -69,7 +69,7 @@ export default function FaturamentoPage() {
         ))}
       </div>
 
-      <div style={{ border: "1px solid #DDA9A9", borderRadius: 14, background: "#FBE6E4", marginTop: 16, overflow: "hidden" }}>
+      <div style={{ border: "1px solid #CC8C8C", borderRadius: 14, background: "#F5D9D7", marginTop: 16, overflow: "hidden" }}>
         <table>
           <thead>
             <tr>
@@ -83,7 +83,7 @@ export default function FaturamentoPage() {
           <tbody>
             {visiveis.length === 0 && (
               <tr>
-                <td colSpan={5} style={{ color: "#7A5F58", textAlign: "center" }}>
+                <td colSpan={5} style={{ color: "#664A43", textAlign: "center" }}>
                   Nenhuma fatura ainda.
                 </td>
               </tr>
@@ -108,13 +108,13 @@ function StatCard({ label, value, destaque }: { label: string; value: string; de
   return (
     <div
       style={{
-        border: `1px solid ${destaque ? "#E6C9A0" : "#DDA9A9"}`,
+        border: `1px solid ${destaque ? "#E6C9A0" : "#CC8C8C"}`,
         borderRadius: 14,
         padding: 18,
-        background: destaque ? "#FBF0DD" : "#FBE6E4",
+        background: destaque ? "#FBF0DD" : "#F5D9D7",
       }}
     >
-      <div style={{ fontSize: 12, color: "#7A5F58" }}>{label}</div>
+      <div style={{ fontSize: 12, color: "#664A43" }}>{label}</div>
       <div style={{ fontSize: 22, fontWeight: 800, marginTop: 6, color: destaque ? "#A8782A" : "#4B3A31" }}>{value}</div>
     </div>
   );
