@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { FuncionarioPerfilScreen } from "../screens/funcionario/PerfilScreen";
 import { EditarPerfilScreen } from "../screens/funcionario/EditarPerfilScreen";
 import { SuporteScreen } from "../screens/shared/SuporteScreen";
+import { SobreScreen } from "../screens/shared/SobreScreen";
 import { darkStackScreenOptions } from "./stackHeaderOptions";
 
 // Antes a aba "Perfil" do funcionário era a tela direto, sem stack — precisou
@@ -12,6 +13,7 @@ export type FuncionarioPerfilStackParamList = {
   Perfil: undefined;
   EditarPerfil: undefined;
   Suporte: undefined;
+  Sobre: undefined;
 };
 
 const Stack = createNativeStackNavigator<FuncionarioPerfilStackParamList>();
@@ -22,6 +24,7 @@ export function FuncionarioPerfilStackNavigator() {
       <Stack.Screen name="Perfil" component={FuncionarioPerfilScreen} />
       <Stack.Screen name="EditarPerfil" component={EditarPerfilScreen} options={{ headerShown: true, title: "Editar perfil" }} />
       <Stack.Screen name="Suporte" component={SuporteScreen} options={{ headerShown: true, title: "Suporte" }} />
+      <Stack.Screen name="Sobre" component={SobreScreen} options={{ headerShown: true, title: "Sobre" }} />
     </Stack.Navigator>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
+import { TecladoSeguro } from "../../components/TecladoSeguro";
+import { Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Ionicons } from "@expo/vector-icons";
@@ -47,7 +48,7 @@ const NOVO_CARTAO = "novo" as const;
 // (AgendamentosService.criarLote) nem percebe a diferença — sempre recebe um
 // `cartaoToken` de uso único, exatamente como no cartão novo.
 export function CartaoScreen({ route, navigation }: Props) {
-  const { salaoId, inicio, itens, valorCentavos, funcionariosPorCategoria, simultaneo } = route.params;
+  const { salaoId, inicio, itens, valorCentavos, funcionariosPorCategoria, simultaneo, avisos } = route.params;
 
   const [publicKey, setPublicKey] = useState<string | null>(null);
   const [carregandoChave, setCarregandoChave] = useState(true);
@@ -291,7 +292,7 @@ export function CartaoScreen({ route, navigation }: Props) {
       }
 
       if (data.pagamento) {
-        navigation.replace("Pagamento", { pagamento: data.pagamento, aviso: data.aviso });
+        navigation.replace("Pagamento", { pagamento: data.pagamento, aviso: data.aviso, avisos });
       } else {
         // Caso raro: uma assinatura de pacote mensal cobria o horário e o
         // servidor usou a cota dela em vez de cobrar o cartão (ver
@@ -343,11 +344,7 @@ export function CartaoScreen({ route, navigation }: Props) {
           DeviceIdCollector (WebView oculta no nativo, injeção direta de
           script no Expo Web). */}
       <DeviceIdCollector onDeviceId={aoReceberDeviceId} />
-      <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 24}
-      >
+      <TecladoSeguro>
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <Card style={{ alignItems: "center", gap: spacing.xs }}>
             <Text style={styles.label}>Valor a pagar</Text>
@@ -515,7 +512,7 @@ export function CartaoScreen({ route, navigation }: Props) {
             disabled={carregandoChave || !publicKey}
           />
         </ScrollView>
-      </KeyboardAvoidingView>
+      </TecladoSeguro>
     </SafeAreaView>
   );
 }

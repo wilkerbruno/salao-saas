@@ -16,6 +16,7 @@ import { ConectarMercadoPagoScreen } from "../screens/salao/ConectarMercadoPagoS
 import { EditarPerfilScreen } from "../screens/salao/EditarPerfilScreen";
 import { QrCodeScreen } from "../screens/salao/QrCodeScreen";
 import { SuporteScreen } from "../screens/shared/SuporteScreen";
+import { SobreScreen } from "../screens/shared/SobreScreen";
 import { darkStackScreenOptions } from "./stackHeaderOptions";
 
 export type MaisStackParamList = {
@@ -40,6 +41,7 @@ export type MaisStackParamList = {
   // Cartaz com QR Code pra imprimir e deixar no salão (ver QrCodeScreen).
   QrCode: undefined;
   Suporte: undefined;
+  Sobre: undefined;
 };
 
 const Stack = createNativeStackNavigator<MaisStackParamList>();
@@ -78,6 +80,7 @@ export function MaisStackNavigator() {
       <Stack.Screen name="EditarPerfil" component={EditarPerfilScreen} options={{ headerShown: true, title: "Editar perfil" }} />
       <Stack.Screen name="QrCode" component={QrCodeScreen} options={{ headerShown: true, title: "QR Code para imprimir" }} />
       <Stack.Screen name="Suporte" component={SuporteScreen} options={{ headerShown: true, title: "Suporte" }} />
+      <Stack.Screen name="Sobre" component={SobreScreen} options={{ headerShown: true, title: "Sobre" }} />
     </Stack.Navigator>
   );
 }

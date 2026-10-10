@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
-import { ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { TecladoSeguro } from "../../components/TecladoSeguro";
+import { ActivityIndicator, Platform, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from "@react-navigation/native";
 import { Salao } from "@salao-saas/shared";
@@ -102,7 +103,7 @@ export function EditarPerfilScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+      <TecladoSeguro>
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <Text style={styles.secaoTitulo}>Seus dados</Text>
           <Card style={{ gap: spacing.md }}>
@@ -176,7 +177,7 @@ export function EditarPerfilScreen() {
 
           <Button label="Salvar alterações" onPress={salvar} loading={salvando} />
         </ScrollView>
-      </KeyboardAvoidingView>
+      </TecladoSeguro>
     </SafeAreaView>
   );
 }

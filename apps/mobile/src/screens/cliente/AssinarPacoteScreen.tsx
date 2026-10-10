@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
+import { TecladoSeguro } from "../../components/TecladoSeguro";
+import { ActivityIndicator, Image, Platform, Pressable, ScrollView, StyleSheet, Switch, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Clipboard from "expo-clipboard";
 import { Ionicons } from "@expo/vector-icons";
@@ -359,7 +360,7 @@ export function AssinarPacoteScreen({ route, navigation }: Props) {
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
       <DeviceIdCollector onDeviceId={aoReceberDeviceId} />
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"} keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 24}>
+      <TecladoSeguro>
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <Card style={{ alignItems: "center", gap: spacing.xs }}>
             <Text style={styles.label}>{pacoteNome}</Text>
@@ -529,7 +530,7 @@ export function AssinarPacoteScreen({ route, navigation }: Props) {
             disabled={(carregandoChave && metodoPagamento === MetodoPagamento.CARTAO) || (metodoPagamento === MetodoPagamento.CARTAO && !publicKey)}
           />
         </ScrollView>
-      </KeyboardAvoidingView>
+      </TecladoSeguro>
     </SafeAreaView>
   );
 }

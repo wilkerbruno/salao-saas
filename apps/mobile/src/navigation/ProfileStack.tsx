@@ -5,6 +5,7 @@ import { MeusPacotesScreen } from "../screens/cliente/MeusPacotesScreen";
 import { EditarPerfilScreen } from "../screens/cliente/EditarPerfilScreen";
 import { SuporteScreen } from "../screens/shared/SuporteScreen";
 import { AssinarPacoteScreen, AssinarPacoteParams } from "../screens/cliente/AssinarPacoteScreen";
+import { SobreScreen } from "../screens/shared/SobreScreen";
 import { darkStackScreenOptions } from "./stackHeaderOptions";
 
 export type ProfileStackParamList = {
@@ -13,6 +14,7 @@ export type ProfileStackParamList = {
   MeusPacotes: undefined;
   EditarPerfil: undefined;
   Suporte: undefined;
+  Sobre: undefined;
   // Mesma tela registrada em HomeStack (a partir de SalaoDetailScreen) —
   // aqui entra a partir de MeusPacotesScreen, retomando uma assinatura
   // PENDENTE pra terminar de pagar (ver comentário em AssinarPacoteScreen).
@@ -28,6 +30,7 @@ export function ProfileStackNavigator() {
       <Stack.Screen name="MeusPacotes" component={MeusPacotesScreen} options={{ headerShown: true, title: "Meus pacotes" }} />
       <Stack.Screen name="EditarPerfil" component={EditarPerfilScreen} options={{ headerShown: true, title: "Editar perfil" }} />
       <Stack.Screen name="Suporte" component={SuporteScreen} options={{ headerShown: true, title: "Suporte" }} />
+      <Stack.Screen name="Sobre" component={SobreScreen} options={{ headerShown: true, title: "Sobre" }} />
       <Stack.Screen
         name="AssinarPacote"
         component={AssinarPacoteScreen as any}

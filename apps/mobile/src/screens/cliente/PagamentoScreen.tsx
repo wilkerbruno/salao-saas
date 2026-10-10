@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { AvisoAgendamentoModal } from "../../components/AvisoAgendamentoModal";
 import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as Clipboard from "expo-clipboard";
@@ -35,7 +36,8 @@ const INTERVALO_POLL_MS = 4000;
 // precisar de nenhuma lógica extra (assim que o Mercado Pago decide o
 // resultado, o próximo poll já traz APROVADO/RECUSADO).
 export function PagamentoScreen({ route, navigation }: Props) {
-  const { aviso } = route.params;
+  const { aviso, avisos } = route.params;
+  const [avisoLido, setAvisoLido] = useState(false);
   const [pagamento, setPagamento] = useState<Pagamento>(route.params.pagamento);
   const [copiado, setCopiado] = useState(false);
   const pollAtivo = useRef(true);
@@ -116,6 +118,7 @@ export function PagamentoScreen({ route, navigation }: Props) {
         <Text style={styles.tituloSucesso}>Pagamento confirmado!</Text>
         <Text style={styles.hint}>Seu horário está garantido. Você pode acompanhar em Meus agendamentos.</Text>
         <Button label="Ver meus agendamentos" onPress={() => navigation.navigate("Home")} />
+        <AvisoAgendamentoModal visivel={!!avisos?.length && !avisoLido} avisos={avisos ?? []} onConcordar={() => setAvisoLido(true)} />
       </SafeAreaView>
     );
   }

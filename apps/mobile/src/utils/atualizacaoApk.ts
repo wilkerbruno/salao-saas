@@ -30,9 +30,25 @@ import * as IntentLauncher from "expo-intent-launcher";
 
 const URL_VERSAO = "https://elevaone.store/downloads/versao.json";
 
-interface VersaoRemota {
+export interface VersaoRemota {
   versionCode: number;
+  versionName?: string;
   apkUrl: string;
+}
+
+// Lê o versao.json publicado no site (versão disponível pra download).
+export async function obterVersaoRemota(): Promise<VersaoRemota> {
+  const resposta = await fetch(`${URL_VERSAO}?t=${Date.now()}`, { cache: "no-store" as any });
+  if (!resposta.ok) throw new Error(`HTTP ${resposta.status}`);
+  return (await resposta.json()) as VersaoRemota;
+}
+
+// Versão instalada neste aparelho (versionCode / versionName do APK).
+export function obterVersaoInstalada(): { versionCode: number; versionName: string } {
+  return {
+    versionCode: Number(Application.nativeBuildVersion ?? 0),
+    versionName: Application.nativeApplicationVersion ?? "-",
+  };
 }
 
 export type ResultadoAtualizacaoApk =

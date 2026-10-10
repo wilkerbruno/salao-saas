@@ -382,10 +382,17 @@ export function BookingScreen({ route, navigation }: Props) {
       void executarConfirmacao();
       return;
     }
+    // Pix/cartão: o aviso só aparece DEPOIS do pagamento aprovado (na tela de
+    // pagamento) — assim o cliente não espera 60s antes de pagar e desistir.
+    // Dinheiro e pacote mensal (sem cobrança online) mantêm o aviso antes.
+    if (formaPagamento === MetodoPagamento.PIX || formaPagamento === MetodoPagamento.CARTAO) {
+      void executarConfirmacao(avisos);
+      return;
+    }
     setAvisosModal(avisos);
   }
 
-  async function executarConfirmacao() {
+  async function executarConfirmacao(avisosPosPagamento: AvisoItem[] = []) {
     if (!diaSelecionado || !horarioSelecionado || itensSelecionados.length === 0) return;
     // Offset fixo do horário de Brasília: evita depender do fuso configurado
     // no aparelho do cliente pra não agendar num horário errado.
@@ -402,7 +409,7 @@ export function BookingScreen({ route, navigation }: Props) {
     // formulário nativo (tokeniza e cobra na hora, sem sair do app); é a
     // CartaoScreen quem chama POST /agendamentos/lote depois de tokenizar.
     if (formaPagamento === MetodoPagamento.CARTAO) {
-      navigation.navigate("Cartao", { salaoId, inicio, itens, valorCentavos: precoTotalCentavos, funcionariosPorCategoria, simultaneo: simultaneoAtivo });
+      navigation.navigate("Cartao", { salaoId, inicio, itens, valorCentavos: precoTotalCentavos, funcionariosPorCategoria, simultaneo: simultaneoAtivo, avisos: avisosPosPagamento });
       return;
     }
 
@@ -424,7 +431,7 @@ export function BookingScreen({ route, navigation }: Props) {
         alertar("Agendamento confirmado!", "Pague em dinheiro direto no salão, na hora do atendimento.");
         navigation.navigate("Home");
       } else if (data.pagamento) {
-        navigation.replace("Pagamento", { pagamento: data.pagamento, aviso: data.aviso });
+        navigation.replace("Pagamento", { pagamento: data.pagamento, aviso: data.aviso, avisos: avisosPosPagamento });
       } else {
         alertar("Agendamento confirmado!", "Reservado usando a cota do seu pacote mensal.");
         navigation.navigate("Home");

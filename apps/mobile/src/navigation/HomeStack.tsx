@@ -36,10 +36,12 @@ export type HomeStackParamList = {
     valorCentavos: number;
     funcionariosPorCategoria?: FuncionariosPorCategoria;
     simultaneo?: boolean;
+    // Avisos do salão a mostrar só depois do pagamento aprovado.
+    avisos?: { titulo?: string; texto: string }[];
   };
   // Cobrança (Pix/Cartão) gerada ao confirmar o agendamento — ver
   // AgendamentosService.criarLote/AgendamentoLoteCriado.
-  Pagamento: { pagamento: Pagamento; aviso: string };
+  Pagamento: { pagamento: Pagamento; aviso: string; avisos?: { titulo?: string; texto: string }[] };
   // Assinar um pacote mensal — entra aqui a partir de SalaoDetailScreen
   // (também registrada em ProfileStack, a partir de MeusPacotesScreen, ver
   // comentário em AssinarPacoteScreen).

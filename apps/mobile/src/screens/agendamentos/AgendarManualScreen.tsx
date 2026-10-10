@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { TecladoSeguro } from "../../components/TecladoSeguro";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { alertar } from "../../utils/alertaCompat";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -254,7 +255,8 @@ export function AgendarManualScreen({ navigation }: Props) {
 
   return (
     <SafeAreaView style={styles.container} edges={["top"]}>
-      <ScrollView contentContainerStyle={styles.content}>
+      <TecladoSeguro>
+      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
         {!souFuncionario && (
           <>
             <Text style={styles.sectionTitle}>Profissional (atende as áreas dela)</Text>
@@ -430,6 +432,7 @@ export function AgendarManualScreen({ navigation }: Props) {
           </>
         )}
       </ScrollView>
+      </TecladoSeguro>
     </SafeAreaView>
   );
 }

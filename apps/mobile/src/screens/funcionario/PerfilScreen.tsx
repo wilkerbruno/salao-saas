@@ -28,8 +28,11 @@ export function FuncionarioPerfilScreen({ navigation }: Props) {
             <Text style={[styles.item, styles.itemComBorda]} onPress={() => navigation.navigate("EditarPerfil")}>
               Editar perfil
             </Text>
-            <Text style={styles.item} onPress={() => navigation.navigate("Suporte")}>
+            <Text style={[styles.item, styles.itemComBorda]} onPress={() => navigation.navigate("Suporte")}>
               Suporte
+            </Text>
+            <Text style={styles.item} onPress={() => navigation.navigate("Sobre")}>
+              Sobre
             </Text>
           </Card>
         </View>

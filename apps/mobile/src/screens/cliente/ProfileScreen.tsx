@@ -30,8 +30,11 @@ export function ProfileScreen({ navigation }: Props) {
             <Text style={[styles.item, styles.itemComBorda]} onPress={() => navigation.navigate("MeusPacotes")}>
               Meus pacotes mensais
             </Text>
-            <Text style={styles.item} onPress={() => navigation.navigate("Suporte")}>
+            <Text style={[styles.item, styles.itemComBorda]} onPress={() => navigation.navigate("Suporte")}>
               Suporte
+            </Text>
+            <Text style={styles.item} onPress={() => navigation.navigate("Sobre")}>
+              Sobre
             </Text>
           </Card>
         </View>
