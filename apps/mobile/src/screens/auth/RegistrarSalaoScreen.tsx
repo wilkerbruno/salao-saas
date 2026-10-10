@@ -27,6 +27,7 @@ export function RegistrarSalaoScreen() {
   const [endereco, setEndereco] = useState(ENDERECO_VAZIO);
   const [planos, setPlanos] = useState<Plano[]>([]);
   const [planoId, setPlanoId] = useState<string | null>(null);
+  const [tambemFuncionario, setTambemFuncionario] = useState<boolean | null>(null);
   const [logo, setLogo] = useState<ImagePicker.ImagePickerAsset | null>(null);
   const [erro, setErro] = useState<string | null>(null);
   const [carregando, setCarregando] = useState(false);
@@ -87,6 +88,10 @@ export function RegistrarSalaoScreen() {
       setErro("Informe o endereço completo do salão (CEP, rua, número, bairro e cidade).");
       return;
     }
+    if (tambemFuncionario === null) {
+      setErro("Informe se você também atende clientes no salão.");
+      return;
+    }
     setErro(null);
     setCarregando(true);
     try {
@@ -98,6 +103,7 @@ export function RegistrarSalaoScreen() {
         telefone,
         endereco: enderecoParaApi(endereco),
         planoId,
+        tambemFuncionario,
       });
       await enviarLogoSeHouver(data.salao.id);
       await entrar(data.accessToken, data.usuario);
@@ -172,6 +178,27 @@ export function RegistrarSalaoScreen() {
           </View>
           <Text style={styles.label}>Endereço do salão</Text>
           <EnderecoForm valores={endereco} onChange={setEndereco} />
+
+          <Text style={styles.label}>Você também atende clientes?</Text>
+          <Text style={{ fontSize: 12, color: colors.inkMuted, marginTop: -4 }}>
+            Se sim, você já terá a sua agenda, horários e financeiro de profissional na mesma conta — sem criar outro login.
+          </Text>
+          <View style={{ flexDirection: "row", gap: spacing.sm }}>
+            {[
+              { valor: true, rotulo: "Sim, eu também atendo" },
+              { valor: false, rotulo: "Não, só administro" },
+            ].map((op) => {
+              const sel = tambemFuncionario === op.valor;
+              return (
+                <Pressable key={String(op.valor)} style={{ flex: 1 }} onPress={() => setTambemFuncionario(op.valor)}>
+                  <Card style={[styles.planoCard, sel && styles.planoCardSelecionado]}>
+                    <Text style={[styles.planoNome, { flex: 1 }]}>{op.rotulo}</Text>
+                    <Ionicons name={sel ? "checkmark-circle" : "ellipse-outline"} size={20} color={sel ? colors.accent : colors.inkMuted} />
+                  </Card>
+                </Pressable>
+              );
+            })}
+          </View>
 
           <Text style={styles.label}>Plano</Text>
           <View style={{ gap: spacing.sm }}>

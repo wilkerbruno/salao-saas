@@ -61,7 +61,7 @@ export class AgendamentosController {
   }
 
   // Agenda do próprio funcionário logado. ?data=2026-08-31 filtra o dia inteiro.
-  @Roles(Papel.FUNCIONARIO)
+  @Roles(Papel.FUNCIONARIO, Papel.SALAO_ADMIN)
   @Get("minha-agenda")
   minhaAgenda(@CurrentUser() user: AuthUser, @Query("data") data?: string) {
     const { inicio, fim } = this.parseIntervaloDia(data);

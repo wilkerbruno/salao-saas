@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { MetodoPagamento, OrigemAgendamento, StatusAgendamento } from "@salao-saas/shared";
 import { PrismaService } from "../prisma/prisma.service";
 
@@ -193,6 +193,130 @@ export class FinanceiroService {
       porFuncionario,
       porServico,
       porMetodo,
+    };
+  }
+
+  // ---------- Relatórios (recurso do plano) ----------
+
+  // O plano ATUAL do salão precisa ter "Relatórios" ligado (admin SaaS marca
+  // isso em Planos). Sem assinatura encontrada, não libera.
+  async relatoriosDisponiveis(salaoId: string): Promise<boolean> {
+    const assinatura = await this.prisma.assinatura.findUnique({ where: { salaoId }, include: { plano: true } });
+    return !!assinatura?.plano.relatoriosHabilitado;
+  }
+
+  private async exigirRelatoriosNoPlano(salaoId: string) {
+    if (!(await this.relatoriosDisponiveis(salaoId))) {
+      throw new ForbiddenException("Seu plano não inclui a geração de relatórios. Faça upgrade do plano para liberar.");
+    }
+  }
+
+  // de/ate: AAAA-MM-DD (horário de Brasília). Padrão: mês atual. Máx. 366 dias.
+  private intervaloRelatorio(de?: string, ate?: string): { inicio: Date; fim: Date; de: string; ate: string } {
+    const ehData = (v?: string) => !!v && /^\d{4}-\d{2}-\d{2}$/.test(v);
+    const hoje = new Date(Date.now() - 3 * 3600 * 1000).toISOString().slice(0, 10);
+    const deFinal = ehData(de) ? (de as string) : `${hoje.slice(0, 8)}01`;
+    const ateFinal = ehData(ate) ? (ate as string) : hoje;
+    const inicio = new Date(`${deFinal}T00:00:00-03:00`);
+    const fim = new Date(`${ateFinal}T23:59:59.999-03:00`);
+    if (Number.isNaN(inicio.getTime()) || Number.isNaN(fim.getTime()) || fim < inicio) {
+      throw new BadRequestException("Período inválido.");
+    }
+    if (fim.getTime() - inicio.getTime() > 366 * 24 * 3600 * 1000) {
+      throw new BadRequestException("O período do relatório pode ter no máximo 1 ano.");
+    }
+    return { inicio, fim, de: deFinal, ate: ateFinal };
+  }
+
+  private linhasRelatorio(
+    agendamentos: Array<{
+      inicio: Date;
+      status: string;
+      precoCentavos: number;
+      valorMultaCentavos: number | null;
+      servico: { nome: string } | null;
+      pacote: { nome: string } | null;
+      funcionario: { comissaoPercentual: number; usuario: { nome: string } } | null;
+    }>,
+  ) {
+    return agendamentos.map((a) => {
+      const concluido = a.status === StatusAgendamento.CONCLUIDO;
+      const valorCentavos = concluido ? a.precoCentavos : (a.valorMultaCentavos ?? 0);
+      const percentual = a.funcionario?.comissaoPercentual ?? 0;
+      return {
+        inicio: a.inicio.toISOString(),
+        servico: a.servico?.nome ?? a.pacote?.nome ?? "Outro",
+        profissional: a.funcionario?.usuario.nome ?? "-",
+        status: concluido ? "Concluído" : "Não compareceu (multa)",
+        valorCentavos,
+        comissaoCentavos: concluido ? Math.round((a.precoCentavos * percentual) / 100) : 0,
+      };
+    });
+  }
+
+  // Relatório de UM profissional (o próprio usuário logado — funcionário, ou
+  // dono que também atende).
+  async relatorioFuncionario(usuarioId: string, salaoId: string, de?: string, ate?: string) {
+    await this.exigirRelatoriosNoPlano(salaoId);
+    const funcionario = await this.prisma.funcionario.findUnique({ where: { usuarioId }, include: { usuario: { select: { nome: true } } } });
+    if (!funcionario) throw new NotFoundException("Cadastro de profissional não encontrado para este usuário.");
+    const periodo = this.intervaloRelatorio(de, ate);
+    const agendamentos = await this.prisma.agendamento.findMany({
+      where: {
+        funcionarioId: funcionario.id,
+        status: { in: [StatusAgendamento.CONCLUIDO, StatusAgendamento.NAO_COMPARECEU] },
+        inicio: { gte: periodo.inicio, lte: periodo.fim },
+      },
+      include: { servico: { select: { nome: true } }, pacote: { select: { nome: true } }, funcionario: { select: { comissaoPercentual: true, usuario: { select: { nome: true } } } } },
+      orderBy: { inicio: "asc" },
+    });
+    const linhas = this.linhasRelatorio(agendamentos);
+    return {
+      titulo: `Relatório de ${funcionario.usuario.nome}`,
+      de: periodo.de,
+      ate: periodo.ate,
+      linhas,
+      totais: this.totaisRelatorio(linhas),
+    };
+  }
+
+  // Relatório total do salão (todos os profissionais) — só o dono.
+  async relatorioSalao(salaoId: string, de?: string, ate?: string) {
+    await this.exigirRelatoriosNoPlano(salaoId);
+    const periodo = this.intervaloRelatorio(de, ate);
+    const agendamentos = await this.prisma.agendamento.findMany({
+      where: {
+        salaoId,
+        status: { in: [StatusAgendamento.CONCLUIDO, StatusAgendamento.NAO_COMPARECEU] },
+        inicio: { gte: periodo.inicio, lte: periodo.fim },
+      },
+      include: { servico: { select: { nome: true } }, pacote: { select: { nome: true } }, funcionario: { select: { comissaoPercentual: true, usuario: { select: { nome: true } } } } },
+      orderBy: { inicio: "asc" },
+    });
+    const linhas = this.linhasRelatorio(agendamentos);
+    const porProfissionalMap = new Map<string, { profissional: string; atendimentos: number; valorCentavos: number; comissaoCentavos: number }>();
+    for (const l of linhas) {
+      const atual = porProfissionalMap.get(l.profissional) ?? { profissional: l.profissional, atendimentos: 0, valorCentavos: 0, comissaoCentavos: 0 };
+      atual.atendimentos += 1;
+      atual.valorCentavos += l.valorCentavos;
+      atual.comissaoCentavos += l.comissaoCentavos;
+      porProfissionalMap.set(l.profissional, atual);
+    }
+    return {
+      titulo: "Relatório geral do salão",
+      de: periodo.de,
+      ate: periodo.ate,
+      linhas,
+      totais: this.totaisRelatorio(linhas),
+      porProfissional: Array.from(porProfissionalMap.values()),
+    };
+  }
+
+  private totaisRelatorio(linhas: Array<{ valorCentavos: number; comissaoCentavos: number }>) {
+    return {
+      atendimentos: linhas.length,
+      valorCentavos: linhas.reduce((s, l) => s + l.valorCentavos, 0),
+      comissaoCentavos: linhas.reduce((s, l) => s + l.comissaoCentavos, 0),
     };
   }
 }

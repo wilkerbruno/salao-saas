@@ -2,6 +2,8 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { useProfissionalDono } from "../../store/profissionalDonoStore";
+import { alertar } from "../../utils/alertaCompat";
 import { useAuthStore } from "../../store/authStore";
 import { Card } from "../../components/Card";
 import { colors, spacing } from "../../theme/tokens";
@@ -11,9 +13,35 @@ type Props = NativeStackScreenProps<MaisStackParamList, "Mais">;
 
 export function MaisScreen({ navigation }: Props) {
   const logout = useAuthStore((s) => s.logout);
+  const atende = useProfissionalDono((s) => s.atende);
+  const ativarAtendimento = useProfissionalDono((s) => s.ativar);
 
   const itens: Array<{ label: string; onPress: () => void }> = [
     { label: "Editar perfil", onPress: () => navigation.navigate("EditarPerfil") },
+    ...(atende
+      ? [
+          { label: "Meus horários (como profissional)", onPress: () => navigation.navigate("MeusHorarios") },
+          { label: "Meu financeiro (como profissional)", onPress: () => navigation.navigate("MeuFinanceiro") },
+        ]
+      : [
+          {
+            label: "Eu também atendo (ativar minha agenda)",
+            onPress: () =>
+              alertar("Ativar minha agenda?", "Você passa a ter agenda, horários e financeiro como profissional, na mesma conta.", [
+                { text: "Agora não", style: "cancel" },
+                {
+                  text: "Ativar",
+                  onPress: async () => {
+                    try {
+                      await ativarAtendimento();
+                    } catch {
+                      alertar("Não foi possível ativar", "Tente novamente em instantes.");
+                    }
+                  },
+                },
+              ]),
+          },
+        ]),
     { label: "Serviços", onPress: () => navigation.navigate("Servicos") },
     { label: "Pacotes", onPress: () => navigation.navigate("Pacotes") },
     { label: "Pacotes mensais", onPress: () => navigation.navigate("PacotesMensais") },

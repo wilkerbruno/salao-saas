@@ -38,9 +38,25 @@ export class FuncionariosController {
     return this.funcionariosService.atualizar(id, user.salaoId, dto);
   }
 
+  // O dono também atende? Devolve o cadastro de profissional dele (ou null).
+  @Roles(Papel.SALAO_ADMIN)
+  @Get("eu")
+  eu(@CurrentUser() user: AuthUser) {
+    return this.funcionariosService.buscarCadastroDoDono(user.id);
+  }
+
+  // Dono de salão já existente (ou que não marcou no cadastro) passa a
+  // atender também: cria o cadastro de profissional dele.
+  @Roles(Papel.SALAO_ADMIN)
+  @Post("eu")
+  virarFuncionario(@CurrentUser() user: AuthUser) {
+    if (!user.salaoId) throw new ForbiddenException("Usuário sem salão associada.");
+    return this.funcionariosService.criarCadastroDoDono(user.id, user.salaoId);
+  }
+
   // Só o id do cadastro na equipe do funcionário logado — usado pra lançar
   // um agendamento manual na própria agenda (ver AgendamentosController).
-  @Roles(Papel.FUNCIONARIO)
+  @Roles(Papel.FUNCIONARIO, Papel.SALAO_ADMIN)
   @Get("meu-id")
   meuId(@CurrentUser() user: AuthUser) {
     return this.funcionariosService.buscarMeuId(user.id);
@@ -48,13 +64,13 @@ export class FuncionariosController {
 
   // ---------- Foto de perfil (o próprio funcionário) ----------
 
-  @Roles(Papel.FUNCIONARIO)
+  @Roles(Papel.FUNCIONARIO, Papel.SALAO_ADMIN)
   @Get("minha-foto")
   minhaFoto(@CurrentUser() user: AuthUser) {
     return this.funcionariosService.buscarMinhaFoto(user.id);
   }
 
-  @Roles(Papel.FUNCIONARIO)
+  @Roles(Papel.FUNCIONARIO, Papel.SALAO_ADMIN)
   @Post("minha-foto")
   @UseInterceptors(FileInterceptor("foto", { storage: memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } }))
   atualizarMinhaFoto(@UploadedFile() file: Express.Multer.File, @CurrentUser() user: AuthUser) {
@@ -63,13 +79,13 @@ export class FuncionariosController {
 
   // ---------- Horário de trabalho semanal (o próprio funcionário) ----------
 
-  @Roles(Papel.FUNCIONARIO)
+  @Roles(Papel.FUNCIONARIO, Papel.SALAO_ADMIN)
   @Get("meus-horarios")
   meusHorarios(@CurrentUser() user: AuthUser) {
     return this.funcionariosService.listarMeusHorarios(user.id);
   }
 
-  @Roles(Papel.FUNCIONARIO)
+  @Roles(Papel.FUNCIONARIO, Papel.SALAO_ADMIN)
   @Post("meus-horarios")
   definirMeusHorarios(@Body() dto: DefinirHorariosDto, @CurrentUser() user: AuthUser) {
     return this.funcionariosService.definirMeusHorarios(user.id, dto);
@@ -77,19 +93,19 @@ export class FuncionariosController {
 
   // ---------- Folgas / bloqueios pontuais (o próprio funcionário) ----------
 
-  @Roles(Papel.FUNCIONARIO)
+  @Roles(Papel.FUNCIONARIO, Papel.SALAO_ADMIN)
   @Get("minhas-folgas")
   minhasFolgas(@CurrentUser() user: AuthUser) {
     return this.funcionariosService.listarMinhasFolgas(user.id);
   }
 
-  @Roles(Papel.FUNCIONARIO)
+  @Roles(Papel.FUNCIONARIO, Papel.SALAO_ADMIN)
   @Post("minhas-folgas")
   criarMinhaFolga(@Body() dto: CreateFolgaDto, @CurrentUser() user: AuthUser) {
     return this.funcionariosService.criarMinhaFolga(user.id, dto);
   }
 
-  @Roles(Papel.FUNCIONARIO)
+  @Roles(Papel.FUNCIONARIO, Papel.SALAO_ADMIN)
   @Delete("minhas-folgas/:id")
   removerMinhaFolga(@Param("id") id: string, @CurrentUser() user: AuthUser) {
     return this.funcionariosService.removerMinhaFolga(user.id, id);

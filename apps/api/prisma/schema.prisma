@@ -777,6 +777,11 @@ model Plano {
   atendimentoPrioritario Boolean @default(false)
   whatsappSuporte        String?
 
+  // Relatórios: quando true, o dono (relatório total do salão) e cada
+  // profissional (relatório próprio) veem o botão "Gerar relatório" no app.
+  // Validado no FinanceiroService — a API recusa se o plano ATUAL não tiver.
+  relatoriosHabilitado Boolean @default(false)
+
   assinaturas Assinatura[]
   pagamentosAssinatura PagamentoAssinatura[]
 }

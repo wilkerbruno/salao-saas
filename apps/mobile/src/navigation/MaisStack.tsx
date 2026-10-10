@@ -16,6 +16,8 @@ import { ConectarMercadoPagoScreen } from "../screens/salao/ConectarMercadoPagoS
 import { EditarPerfilScreen } from "../screens/salao/EditarPerfilScreen";
 import { QrCodeScreen } from "../screens/salao/QrCodeScreen";
 import { SuporteScreen } from "../screens/shared/SuporteScreen";
+import { FuncionarioHorariosScreen as MeusHorariosScreen } from "../screens/funcionario/HorariosScreen";
+import { FuncionarioFinanceiroScreen as MeuFinanceiroScreen } from "../screens/funcionario/FinanceiroScreen";
 import { SobreScreen } from "../screens/shared/SobreScreen";
 import { darkStackScreenOptions } from "./stackHeaderOptions";
 
@@ -42,6 +44,9 @@ export type MaisStackParamList = {
   QrCode: undefined;
   Suporte: undefined;
   Sobre: undefined;
+  // Dono que também atende (ver useProfissionalDono).
+  MeusHorarios: undefined;
+  MeuFinanceiro: undefined;
 };
 
 const Stack = createNativeStackNavigator<MaisStackParamList>();
@@ -80,6 +85,8 @@ export function MaisStackNavigator() {
       <Stack.Screen name="EditarPerfil" component={EditarPerfilScreen} options={{ headerShown: true, title: "Editar perfil" }} />
       <Stack.Screen name="QrCode" component={QrCodeScreen} options={{ headerShown: true, title: "QR Code para imprimir" }} />
       <Stack.Screen name="Suporte" component={SuporteScreen} options={{ headerShown: true, title: "Suporte" }} />
+      <Stack.Screen name="MeusHorarios" component={MeusHorariosScreen} options={{ headerShown: true, title: "Meus horários" }} />
+      <Stack.Screen name="MeuFinanceiro" component={MeuFinanceiroScreen} options={{ headerShown: true, title: "Meu financeiro" }} />
       <Stack.Screen name="Sobre" component={SobreScreen} options={{ headerShown: true, title: "Sobre" }} />
     </Stack.Navigator>
   );

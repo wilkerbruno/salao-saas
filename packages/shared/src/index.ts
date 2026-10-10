@@ -726,6 +726,8 @@ export interface Plano {
   // quem está num salão nesse plano (ver ConfiguracoesService.obterSuporte).
   atendimentoPrioritario: boolean;
   whatsappSuporte?: string | null;
+  // Libera "Gerar relatório" (por profissional e total do salão) no app.
+  relatoriosHabilitado?: boolean;
 }
 
 // Preço do plano anual (12x o mensal, com o desconto configurado pelo

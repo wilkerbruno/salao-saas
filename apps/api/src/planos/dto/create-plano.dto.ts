@@ -39,6 +39,11 @@ export class CreatePlanoDto {
   @IsBoolean()
   atendimentoPrioritario?: boolean;
 
+  // Libera "Gerar relatório" (por profissional e total do salão) no app.
+  @IsOptional()
+  @IsBoolean()
+  relatoriosHabilitado?: boolean;
+
   @ValidateIf((o) => o.atendimentoPrioritario === true)
   @IsString()
   @MinLength(8)

@@ -273,6 +273,23 @@ export class FuncionariosService {
     });
   }
 
+  // ---------- dono que também atende ----------
+
+  async buscarCadastroDoDono(usuarioId: string) {
+    return this.prisma.funcionario.findUnique({
+      where: { usuarioId },
+      select: { id: true, cargo: true, comissaoPercentual: true, ativo: true },
+    });
+  }
+
+  async criarCadastroDoDono(usuarioId: string, salaoId: string) {
+    const existente = await this.prisma.funcionario.findUnique({ where: { usuarioId } });
+    if (existente) return existente;
+    return this.prisma.funcionario.create({
+      data: { usuarioId, salaoId, cargo: "Proprietária", comissaoPercentual: 100, especialidades: [] },
+    });
+  }
+
   // ---------- helpers ----------
 
   private async buscarFuncionarioPorUsuario(usuarioId: string) {
@@ -292,7 +309,9 @@ export class FuncionariosService {
     const limite = assinatura?.plano.limiteFuncionarios;
     if (limite == null) return; // sem assinatura encontrada ou plano ilimitado: não bloqueia
 
-    const totalAtivos = await this.prisma.funcionario.count({ where: { salaoId, ativo: true } });
+    const totalAtivos = await this.prisma.funcionario.count({
+      where: { salaoId, ativo: true, usuario: { papel: Papel.FUNCIONARIO } },
+    });
     if (totalAtivos >= limite) {
       throw new BadRequestException(
         `Seu plano (${assinatura!.plano.nome}) permite até ${limite} funcionário${limite === 1 ? "" : "s"}. Desative alguém ou faça upgrade do plano pra adicionar mais.`,

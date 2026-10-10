@@ -13,6 +13,7 @@ const PLANO_FORM_VAZIO = {
   descontoAnualValor: "",
   atendimentoPrioritario: false,
   whatsappSuporte: "",
+  relatoriosHabilitado: false,
 };
 
 type PlanoForm = typeof PLANO_FORM_VAZIO;
@@ -30,6 +31,7 @@ function planoParaForm(plano: Plano): PlanoForm {
         : (plano.descontoAnualValor / 100).toFixed(2),
     atendimentoPrioritario: plano.atendimentoPrioritario,
     whatsappSuporte: plano.whatsappSuporte ?? "",
+    relatoriosHabilitado: !!plano.relatoriosHabilitado,
   };
 }
 
@@ -63,6 +65,7 @@ function validarEConverter(form: PlanoForm): { erro: string } | { corpo: Record<
         form.descontoAnualTipo === TipoDesconto.PERCENTUAL ? Math.round(descontoBruto) : Math.round(descontoBruto * 100),
       atendimentoPrioritario: form.atendimentoPrioritario,
       whatsappSuporte: form.atendimentoPrioritario ? form.whatsappSuporte.trim() : undefined,
+      relatoriosHabilitado: form.relatoriosHabilitado,
     },
   };
 }
@@ -135,6 +138,14 @@ function CamposPlano({ form, onChange }: { form: PlanoForm; onChange: (form: Pla
           />
         )}
       </div>
+      <label style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+        <input
+          type="checkbox"
+          checked={form.relatoriosHabilitado}
+          onChange={(e) => onChange({ ...form, relatoriosHabilitado: e.target.checked })}
+        />
+        Relatórios (libera "Gerar relatório": cada profissional o seu e o dono o total do salão)
+      </label>
       {form.precoReais && !Number.isNaN(parseFloat(form.precoReais.replace(",", "."))) && (
         <div style={{ fontSize: 12, color: "#664A43" }}>
           Preço anual resultante:{" "}
@@ -327,6 +338,10 @@ export default function PlanosPage() {
                   <div style={{ fontSize: 13, fontWeight: 700, marginTop: 4 }}>
                     {plano.atendimentoPrioritario ? `WhatsApp: ${plano.whatsappSuporte}` : "Somente e-mail (padrão)"}
                   </div>
+                </div>
+
+                <div style={{ marginTop: 12, fontSize: 12.5, fontWeight: 700 }}>
+                  Relatórios: {plano.relatoriosHabilitado ? "incluídos" : "não incluídos"}
                 </div>
 
                 <ul style={{ marginTop: 14, paddingLeft: 18, fontSize: 12.5, color: "#664A43" }}>

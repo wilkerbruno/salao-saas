@@ -5,6 +5,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { ResumoFinanceiro } from "@salao-saas/shared";
 import { api } from "../../api/client";
 import { Card } from "../../components/Card";
+import { BotaoRelatorio } from "../../components/BotaoRelatorio";
 import { PriceTag } from "../../components/PriceTag";
 import { colors, spacing } from "../../theme/tokens";
 
@@ -41,6 +42,8 @@ export function FuncionarioFinanceiroScreen() {
             </Text>
           ))}
         </View>
+
+        <BotaoRelatorio tipo="meu" periodo={periodo} />
 
         {resumo && (
           <View style={{ gap: spacing.md }}>

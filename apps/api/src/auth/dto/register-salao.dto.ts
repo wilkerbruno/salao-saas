@@ -43,4 +43,11 @@ export class RegisterSalaoDto {
   @IsOptional()
   @IsBoolean()
   criarCatalogoInicial?: boolean;
+
+  // O dono também atende? Se sim, já nasce com cadastro de profissional
+  // (agenda, horários e financeiro próprios) na MESMA conta — sem precisar
+  // de um segundo login de funcionário.
+  @IsOptional()
+  @IsBoolean()
+  tambemFuncionario?: boolean;
 }

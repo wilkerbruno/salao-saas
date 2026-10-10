@@ -137,6 +137,12 @@ export class AuthService {
         },
       });
 
+      if (dto.tambemFuncionario) {
+        await tx.funcionario.create({
+          data: { usuarioId: dono.id, salaoId: salao.id, cargo: "Proprietária", comissaoPercentual: 100, especialidades: [] },
+        });
+      }
+
       const trialTerminaEm = new Date();
       trialTerminaEm.setDate(trialTerminaEm.getDate() + diasTesteGratis);
 
