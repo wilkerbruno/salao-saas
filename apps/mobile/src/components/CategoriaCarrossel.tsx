@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Image, ImageSourcePropType, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { CATEGORIAS_SERVICO, CategoriaServico } from "@salao-saas/shared";
+import { api } from "../api/client";
 import { colors, spacing } from "../theme/tokens";
+
+export interface ItemCategoriaHome {
+  id: string;
+  rotulo: string;
+  imagemUrl?: string | null;
+  categoria?: CategoriaServico | null;
+  busca?: string | null;
+}
 
 const IMAGENS: Record<string, ImageSourcePropType> = {
   TUDO: require("../../assets/categorias/tudo.png"),
@@ -12,34 +21,44 @@ const IMAGENS: Record<string, ImageSourcePropType> = {
   ESTETICA: require("../../assets/categorias/estetica.png"),
 };
 
-const ROTULOS_CURTOS: Record<string, string> = {
-  SOBRANCELHA_CILIOS: "Sobrancelha e cílios",
-  ESTETICA: "Estética e depilação",
-};
+const PADRAO: ItemCategoriaHome[] = [
+  { id: "tudo", rotulo: "Tudo" },
+  ...CATEGORIAS_SERVICO.filter((c) => c.valor !== "OUTROS").map((c) => ({
+    id: c.valor as string,
+    rotulo: c.valor === "UNHA" ? "Unhas" : c.rotulo,
+    categoria: c.valor,
+  })),
+];
 
-// Carrossel horizontal de categorias com imagem (mesmo funcionamento do CategoriaChips com "Tudo").
+function imagemDe(i: ItemCategoriaHome): ImageSourcePropType {
+  if (i.imagemUrl) return { uri: i.imagemUrl };
+  return IMAGENS[i.categoria ?? "TUDO"] ?? IMAGENS.TUDO;
+}
+
+// Carrossel horizontal de categorias com foto. Os itens vêm do painel admin
+// (GET /categorias-home); se a chamada falhar usa a lista padrão embutida.
 export function CategoriaCarrossel({
-  valor,
+  selecionado,
   onChange,
-  categorias,
 }: {
-  valor: CategoriaServico | undefined;
-  onChange: (categoria: CategoriaServico | undefined) => void;
-  categorias?: readonly CategoriaServico[];
+  selecionado: string;
+  onChange: (item: ItemCategoriaHome) => void;
 }) {
-  const opcoes = CATEGORIAS_SERVICO.filter((c) => !categorias || categorias.includes(c.valor));
-  const itens: { chave: string; rotulo: string; valor: CategoriaServico | undefined }[] = [
-    { chave: "TUDO", rotulo: "Tudo", valor: undefined },
-    ...opcoes.map((c) => ({ chave: c.valor as string, rotulo: ROTULOS_CURTOS[c.valor] ?? c.rotulo, valor: c.valor })),
-  ];
+  const [itens, setItens] = useState<ItemCategoriaHome[]>(PADRAO);
+  useEffect(() => {
+    api
+      .get<ItemCategoriaHome[]>("/categorias-home")
+      .then((r) => r.data.length > 0 && setItens(r.data))
+      .catch(() => {});
+  }, []);
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.lista}>
       {itens.map((i) => {
-        const ativo = valor === i.valor;
+        const ativo = selecionado === i.id || (selecionado === "tudo" && !i.categoria && !i.busca);
         return (
-          <Pressable key={i.chave} onPress={() => onChange(i.valor)} style={styles.item} hitSlop={4}>
+          <Pressable key={i.id} onPress={() => onChange(i)} style={styles.item} hitSlop={4}>
             <View style={[styles.anel, ativo && styles.anelAtivo]}>
-              <Image source={IMAGENS[i.chave]} style={styles.imagem} />
+              <Image source={imagemDe(i)} style={styles.imagem} />
             </View>
             <Text style={[styles.rotulo, ativo && styles.rotuloAtivo]} numberOfLines={2}>
               {i.rotulo}

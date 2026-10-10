@@ -10,6 +10,7 @@ import { AgendamentosModule } from "./agendamentos/agendamentos.module";
 import { FuncionariosModule } from "./funcionarios/funcionarios.module";
 import { FinanceiroModule } from "./financeiro/financeiro.module";
 import { PlanosModule } from "./planos/planos.module";
+import { CategoriasHomeModule } from "./categorias-home/categorias-home.module";
 import { ConfiguracoesModule } from "./configuracoes/configuracoes.module";
 import { AssinaturasModule } from "./assinaturas/assinaturas.module";
 import { PacotesMensaisModule } from "./pacotes-mensais/pacotes-mensais.module";
@@ -34,6 +35,7 @@ import { AssinaturaGuard } from "./common/guards/assinatura.guard";
     FuncionariosModule,
     FinanceiroModule,
     PlanosModule,
+    CategoriasHomeModule,
     ConfiguracoesModule,
     AssinaturasModule,
     PacotesMensaisModule,

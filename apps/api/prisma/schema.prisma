@@ -895,3 +895,21 @@ model PagamentoAssinatura {
 
   @@index([assinaturaId])
 }
+
+// Itens do carrossel de categorias da Home do app (gerenciados no painel admin).
+// categoria preenchida = filtra pela categoria de serviço; só "busca" = categoria
+// nova (procura salões/serviços por essa palavra); ambos nulos = "Tudo" (fixa).
+model CategoriaHome {
+  id        String   @id @default(uuid())
+  rotulo    String
+  imagemUrl String?  @db.LongText // data URL jpeg já comprimida
+  categoria String?
+  busca     String?
+  ordem     Int      @default(0)
+  ativo     Boolean  @default(true)
+  fixa      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categorias_home")
+}

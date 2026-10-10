@@ -25,6 +25,8 @@ export function HomeScreen({ navigation }: Props) {
   const [saloes, setSaloes] = useState<SalaoProxima[]>([]);
   const [busca, setBusca] = useState("");
   const [categoria, setCategoria] = useState<CategoriaServico | undefined>(undefined);
+  const [catId, setCatId] = useState("tudo");
+  const [termoCategoria, setTermoCategoria] = useState("");
   const [coords, setCoords] = useState<{ lat: number; lng: number } | null>(null);
 
   const buscarLocalizacao = useCallback(async () => {
@@ -54,7 +56,7 @@ export function HomeScreen({ navigation }: Props) {
     const tempo = setTimeout(async () => {
       try {
         const { data } = await api.get<SalaoProxima[]>("/saloes/proximas", {
-          params: { lat: coords.lat, lng: coords.lng, raioKm: 30, q: busca || undefined, categoria },
+          params: { lat: coords.lat, lng: coords.lng, raioKm: 30, q: busca || termoCategoria || undefined, categoria },
         });
         if (!cancelado) {
           setSaloes(data);
@@ -68,7 +70,7 @@ export function HomeScreen({ navigation }: Props) {
       cancelado = true;
       clearTimeout(tempo);
     };
-  }, [coords, busca, categoria]);
+  }, [coords, busca, categoria, termoCategoria]);
 
   if (estado === "carregando") {
     return (
@@ -116,9 +118,12 @@ export function HomeScreen({ navigation }: Props) {
           />
         </View>
         <CategoriaCarrossel
-          valor={categoria}
-          onChange={setCategoria}
-          categorias={["CABELO", "UNHA", "SOBRANCELHA_CILIOS", "MAQUIAGEM", "ESTETICA"]}
+          selecionado={catId}
+          onChange={(item) => {
+            setCatId(item.id);
+            setCategoria(item.categoria ?? undefined);
+            setTermoCategoria(item.categoria ? "" : item.busca ?? "");
+          }}
         />
       </View>
 
