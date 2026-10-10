@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Image, ScrollView, StyleSheet, Text, useWindowDimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Asset } from "expo-asset";
+import * as FileSystem from "expo-file-system/legacy";
 import * as Sharing from "expo-sharing";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
@@ -49,14 +50,24 @@ export function QrCodeScreen() {
       }
       const asset = Asset.fromModule(QRCODE_ASSET);
       await asset.downloadAsync();
-      const uri = asset.localUri ?? asset.uri;
-      await Sharing.shareAsync(uri, {
+      const origem = asset.localUri ?? asset.uri;
+      // No APK de produção o asset embutido não é um arquivo "compartilhável"
+      // (o Android não deixa outros apps lerem direto de dentro do pacote).
+      // Copia pra pasta de cache do app — aí sim o Sharing consegue entregar.
+      const destino = FileSystem.cacheDirectory + "cartaz-elevaone-qrcode.png";
+      await FileSystem.deleteAsync(destino, { idempotent: true });
+      if (/^https?:/.test(origem)) {
+        await FileSystem.downloadAsync(origem, destino);
+      } else {
+        await FileSystem.copyAsync({ from: origem, to: destino });
+      }
+      await Sharing.shareAsync(destino, {
         dialogTitle: "Salvar ou imprimir QR Code",
         mimeType: "image/png",
         UTI: "public.png",
       });
-    } catch {
-      alertar("Não foi possível compartilhar", "Tente novamente em instantes.");
+    } catch (e: any) {
+      alertar("Não foi possível compartilhar", `Tente novamente em instantes.${e?.message ? `\n\n(${e.message})` : ""}`);
     } finally {
       setCompartilhando(false);
     }
