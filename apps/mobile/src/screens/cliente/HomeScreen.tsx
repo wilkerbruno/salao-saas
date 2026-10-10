@@ -8,7 +8,7 @@ import { CategoriaServico, SalaoProxima } from "@salao-saas/shared";
 import { api } from "../../api/client";
 import { Button } from "../../components/Button";
 import { Card } from "../../components/Card";
-import { CategoriaChips } from "../../components/CategoriaChips";
+import { CategoriaCarrossel } from "../../components/CategoriaCarrossel";
 import { StarRating } from "../../components/StarRating";
 import { colors, radius, spacing } from "../../theme/tokens";
 import { HomeStackParamList } from "../../navigation/HomeStack";
@@ -115,10 +115,9 @@ export function HomeScreen({ navigation }: Props) {
             style={styles.buscaInput}
           />
         </View>
-        <CategoriaChips
+        <CategoriaCarrossel
           valor={categoria}
           onChange={setCategoria}
-          comTodos
           categorias={["CABELO", "UNHA", "SOBRANCELHA_CILIOS", "MAQUIAGEM", "ESTETICA"]}
         />
       </View>
