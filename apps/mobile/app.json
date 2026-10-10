@@ -23,7 +23,7 @@
     },
     "android": {
       "package": "com.divisionstech.salaosaas",
-      "versionCode": 15,
+      "versionCode": 16,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#F8F1E9"
